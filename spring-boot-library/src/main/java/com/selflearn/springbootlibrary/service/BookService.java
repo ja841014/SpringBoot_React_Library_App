@@ -19,10 +19,19 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    public Page<Book> findAll(int page, int size) {
+
+
+    public Page<Book> findByTitleContainingAndCategoryContaining(int page, int size, String title, String category) {
         Pageable pageable = PageRequest.of(page, size);
-//        List<Book> t = bookRepository.findAll(pageable).getContent();
-//        System.out.println(t.size());
-        return bookRepository.findAll(pageable);
+        return bookRepository.findByTitleContainingAndCategoryContaining(title, category, pageable);
+    }
+    public Page<Book> findByTitleContaining(int page, int size, String title) {
+        Pageable pageable = PageRequest.of(page, size);
+        return bookRepository.findByTitleContaining(title, pageable);
+    }
+
+    public Page<Book> findByCategoryContaining(int page, int size, String category) {
+        Pageable pageable = PageRequest.of(page, size);
+        return bookRepository.findByCategoryContaining(category, pageable);
     }
 }

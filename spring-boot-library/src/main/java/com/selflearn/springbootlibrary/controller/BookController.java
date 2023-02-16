@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
-@RequestMapping("/api/books")
+@RequestMapping("/api")
 public class BookController {
 
     private BookService bookService;
@@ -21,11 +21,26 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @GetMapping("")
-    public Page<Book> findAll(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
-                              @RequestParam(value = "size", defaultValue = "10", required = false) int size) {
-        System.out.println("hihi");
-        return bookService.findAll(page, size);
+    @GetMapping("/books")
+    public Page<Book> findByTitleContainingOrCategory(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
+                                                      @RequestParam(value = "size", defaultValue = "10", required = false) int size,
+                                                      @RequestParam(value = "title", defaultValue = "", required = false) String title,
+                                                      @RequestParam(value = "category", defaultValue = "", required = false) String category) {
+        System.out.println("page: " + page +", size: "+ size + ", title: " + title + ", category: " + category);
+        if(!title.equals("") && !category.equals("Book Category") && !category.equals("All")) {
+            System.out.println("have title and have category");
+            return bookService.findByTitleContainingAndCategoryContaining(page, size, title, category);
+        }
+        else if(!category.equals("Book Category") && !category.equals("All")) {
+            System.out.println("no title and have category");
+            return bookService.findByCategoryContaining(page, size, category);
+        }
+        else {
+            System.out.println("have title and no category");
+            return bookService.findByTitleContaining(page, size, title);
+        }
+
     }
+
 
 }

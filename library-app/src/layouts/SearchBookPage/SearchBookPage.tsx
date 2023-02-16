@@ -14,6 +14,9 @@ export const SearchBookPage = () => {
     const [booksPerPage] = useState(5);
     const [totalAmountOfBooks, setTotalAmountOfBooks] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
+    const [title, setTitle] = useState('');
+    const [search, setSearch] = useState('');
+    const [categorySelection, setCategorySelection] = useState("Book Category");
 
 
 
@@ -21,18 +24,18 @@ export const SearchBookPage = () => {
     // then it will call each times something change in the array(second para) changes 
     useEffect(() => {
         // why we "currentPage - 1", because in pagination and through the API 0 is the first page.
-        api.getAllBooks({page: currentPage - 1, size: booksPerPage}).then((res) => {
-            const loadedBooks : BookModel[] = [];
+        api.getAllBooks({ page: currentPage - 1, size: booksPerPage, title: title, category: categorySelection }).then((res) => {
+            const loadedBooks: BookModel[] = [];
             console.log(res);
             const responsedata = res.data.content;
 
             setTotalAmountOfBooks(res.data.totalElements)
             setTotalPages(res.data.totalPages)
-            
-            for(const key in responsedata) {
-                
+
+            for (const key in responsedata) {
+
                 loadedBooks.push({
-                    id : responsedata[key].id,
+                    id: responsedata[key].id,
                     title: responsedata[key].title,
                     author: responsedata[key].author,
                     description: responsedata[key].description,
@@ -42,28 +45,29 @@ export const SearchBookPage = () => {
                     img: responsedata[key].img,
                 })
             }
-            
+
             setBooks(loadedBooks);
             setIsLoading(false);
-            
+
             // console.log(books)
-            
+
         }, (error => {
             console.error("Error")
             setIsLoading(false)
             setHttpError(error.message)
             throw new Error(error.message);
         }))
+        // it will scroll the page to the top
+        window.scroll(0, 0);
+    }, [currentPage, search, categorySelection]);
 
-    }, [currentPage]); 
-
-    if(isLoading) {
+    if (isLoading) {
         return (
-            <SpinnerLoading/>
+            <SpinnerLoading />
         )
     }
 
-    if(httpError) {
+    if (httpError) {
         return (
             <div className="container m-5">
                 <p>{httpError}</p>
@@ -71,26 +75,25 @@ export const SearchBookPage = () => {
         )
     }
 
+    const searchHandleChange = () => {
+        setCurrentPage(1);
+        setSearch(title);
+    }
+
+    const categoryField = (value: string) => {
+        setCurrentPage(1);
+        setCategorySelection(value);
+        
+    }
+
 
     const indexOfLastBook: number = currentPage * booksPerPage;
     const indexOfFirstBook: number = indexOfLastBook - booksPerPage;
     let lastItemIdx = booksPerPage * currentPage <= totalAmountOfBooks ? booksPerPage * currentPage : totalAmountOfBooks
-    
+
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-
-    const setSearch = (val: any) => {
-    }
-
-    const searchHandleChange = () => {
-
-    }
-
-    const categoryField = () => {
-
-    }
-
-    return(
+    return (
         <div>
             <div className='container'>
                 <div>
@@ -99,7 +102,7 @@ export const SearchBookPage = () => {
                             <div className='d-flex'>
                                 <input className='form-control me-2' type='search'
                                     placeholder='Search' aria-labelledby='Search'
-                                    onChange={e => setSearch(e.target.value)} />
+                                    onChange={e => setTitle(e.target.value)} />
                                 <button className='btn btn-outline-success'
                                     onClick={() => searchHandleChange()}>
                                     Search
@@ -111,20 +114,20 @@ export const SearchBookPage = () => {
                                 <button className='btn btn-secondary dropdown-toggle' type='button'
                                     id='dropdownMenuButton1' data-bs-toggle='dropdown'
                                     aria-expanded='false'>
-                                    {/* {categorySelection} */}
+                                    {categorySelection}
                                 </button>
                                 <ul className='dropdown-menu' aria-labelledby='dropdownMenuButton1'>
-                                    {/* <li onClick={() => categoryField('All')}>
+                                    <li onClick={() => categoryField('All')}>
                                         <a className='dropdown-item' href='#'>
                                             All
                                         </a>
-                                    </li> */}
-                                    {/* <li onClick={() => categoryField('FE')}>
+                                    </li>
+                                    <li onClick={() => categoryField('FE')}>
                                         <a className='dropdown-item' href='#'>
                                             Front End
                                         </a>
-                                    </li> */}
-                                    {/* <li onClick={() => categoryField('BE')}>
+                                    </li>
+                                    <li onClick={() => categoryField('BE')}>
                                         <a className='dropdown-item' href='#'>
                                             Back End
                                         </a>
@@ -138,22 +141,22 @@ export const SearchBookPage = () => {
                                         <a className='dropdown-item' href='#'>
                                             DevOps
                                         </a>
-                                    </li> */}
+                                    </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
 
-                    {books.map(book => (
+                    {/* {books.map(book => (
                         <SearchBook book={book} key={book.id} />
-                    ))}
-                    {/* {totalAmountOfBooks > 0 ?
+                    ))} */}
+                    {totalAmountOfBooks > 0 ?
                         <>
                             <div className='mt-3'>
                                 <h5>Number of results: ({totalAmountOfBooks})</h5>
                             </div>
                             <p>
-                                {indexOfFirstBook + 1} to {lastItem} of {totalAmountOfBooks} items:
+                                {indexOfFirstBook + 1} to {lastItemIdx} of {totalAmountOfBooks} items:
                             </p>
                             {books.map(book => (
                                 <SearchBook book={book} key={book.id} />
@@ -164,10 +167,10 @@ export const SearchBookPage = () => {
                             <h3>
                                 Can't find what you are looking for?
                             </h3>
-                            <a type='button' className='btn main-color btn-md px-4 me-md-2 fw-bold text-white'
+                            <a type='button' className='btn btn-primary btn-md px-4 me-md-2 fw-bold text-white'
                                 href='#'>Library Services</a>
                         </div>
-                    } */}
+                    }
                     {totalPages > 1 &&
                         <Pagination currentPage={currentPage} totalPages={totalPages} paginate={paginate} />
                     }
