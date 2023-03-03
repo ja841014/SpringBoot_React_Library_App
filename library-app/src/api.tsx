@@ -5,9 +5,15 @@ export default {
         // remember add {} outside "params"
         return axios.get("http://localhost:8080/api/books", {params});
     },
-    // fetchTheBooks() {
-
-    // }
+    /**
+     * 
+     * @param params 
+     * @returns 
+     */
+    getBook(params: any) {
+        console.log(params.id.bookId)
+        return axios.get(`http://localhost:8080/api/books/${params.id.bookId}`);
+    }
 }
 
 /**

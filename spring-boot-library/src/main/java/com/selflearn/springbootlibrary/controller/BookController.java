@@ -26,6 +26,7 @@ public class BookController {
                                                       @RequestParam(value = "size", defaultValue = "10", required = false) int size,
                                                       @RequestParam(value = "title", defaultValue = "", required = false) String title,
                                                       @RequestParam(value = "category", defaultValue = "", required = false) String category) {
+
         System.out.println("page: " + page +", size: "+ size + ", title: " + title + ", category: " + category);
         if(!title.equals("") && !category.equals("Book Category") && !category.equals("All")) {
             System.out.println("have title and have category");
@@ -39,6 +40,11 @@ public class BookController {
             System.out.println("have title and no category");
             return bookService.findByTitleContaining(page, size, title);
         }
+    }
+    @GetMapping("/books/{id}")
+    public Book findById(@PathVariable("id") String id) {
+        System.out.println("book id: " + id);
+        return bookService.findById(id);
 
     }
 

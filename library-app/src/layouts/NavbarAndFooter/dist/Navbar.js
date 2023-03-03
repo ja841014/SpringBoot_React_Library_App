@@ -1,6 +1,7 @@
 "use strict";
 exports.__esModule = true;
 exports.Navbar = void 0;
+var react_router_dom_1 = require("react-router-dom");
 exports.Navbar = function () {
     return (React.createElement("nav", { className: 'navbar navbar-expand-lg navbar-dark main-color py-3' },
         React.createElement("div", { className: 'container-fluid' },
@@ -10,10 +11,10 @@ exports.Navbar = function () {
             React.createElement("div", { className: 'collapse navbar-collapse', id: 'navbarNavDropdown' },
                 React.createElement("ul", { className: 'navbar-nav' },
                     React.createElement("li", { className: 'nav-item' },
-                        React.createElement("a", { className: "nav-link", href: "#" }, "Home")),
+                        React.createElement(react_router_dom_1.NavLink, { className: "nav-link", to: "/home" }, "Home")),
                     React.createElement("li", { className: 'nav-item' },
-                        React.createElement("a", { className: "nav-link", href: "#" }, "Search Book"))),
+                        React.createElement(react_router_dom_1.NavLink, { className: "nav-link", to: "/search" }, "Search Book"))),
                 React.createElement("ul", { className: 'navbar-nav ms-auto' },
                     React.createElement("li", { className: "nav-item m-1" }),
-                    React.createElement("a", { type: "button", className: "btn btn-outline-light", href: "#" }, "Sign in"))))));
+                    React.createElement(react_router_dom_1.NavLink, { type: "button", className: "btn btn-outline-light", to: "#" }, "Sign in"))))));
 };

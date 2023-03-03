@@ -5,6 +5,7 @@ var react_1 = require("react");
 var ReturnBook_1 = require("./ReturnBook");
 var api_1 = require("../../../api");
 var SpinnerLoading_1 = require("../../Utils/SpinnerLoading");
+var react_router_dom_1 = require("react-router-dom");
 exports.Carousel = function () {
     // paranthesis of type array and initial is empty array
     var _a = react_1.useState([]), books = _a[0], setBooks = _a[1];
@@ -65,5 +66,5 @@ exports.Carousel = function () {
                 React.createElement("span", { className: 'visually-hidden' }, "Next"))),
         React.createElement("div", { className: 'd-lg-none mt-3' }, React.createElement(ReturnBook_1.ReturnBook, { key: books[5].author, book: books[5] })),
         React.createElement("div", { className: 'homepage-carousel-title mt-3' },
-            React.createElement("a", { className: "btn btn-outline-secondary btn-lg", href: "#" }, "View More"))));
+            React.createElement(react_router_dom_1.Link, { className: "btn btn-outline-secondary btn-lg", to: "/search" }, "View More"))));
 };

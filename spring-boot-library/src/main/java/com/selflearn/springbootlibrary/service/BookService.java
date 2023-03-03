@@ -20,7 +20,9 @@ public class BookService {
     }
 
 
-
+    public Book findById(String id) {
+        return bookRepository.findById(id);
+    }
     public Page<Book> findByTitleContainingAndCategoryContaining(int page, int size, String title, String category) {
         Pageable pageable = PageRequest.of(page, size);
         return bookRepository.findByTitleContainingAndCategoryContaining(title, category, pageable);
