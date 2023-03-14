@@ -1,4 +1,4 @@
-export const CheckoutAndReviewBox= (props: any) => {
+export const CheckoutAndReviewBox = (props: any) => {
     return (
         <div className={props.mobile ? 'card d-flex mt-5' : 'card col-3 container d-flex mb-5'}>
             <div className='card-body container'>

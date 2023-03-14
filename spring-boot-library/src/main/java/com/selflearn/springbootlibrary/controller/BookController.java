@@ -5,10 +5,9 @@ import com.selflearn.springbootlibrary.entity.Book;
 import com.selflearn.springbootlibrary.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
@@ -42,11 +41,36 @@ public class BookController {
         }
     }
     @GetMapping("/books/{id}")
-    public Book findById(@PathVariable("id") String id) {
+    public Book findById(@PathVariable("id") Long id) {
         System.out.println("book id: " + id);
         return bookService.findById(id);
 
     }
 
+    @PutMapping("/secure/checkout")
+    public Book checkoutBook(@RequestParam Long bookId,
+                             JwtAuthenticationToken jwtAuthenticationToken) throws Exception{
+
+        System.out.println("checkoutBook put: ");
+        System.out.println(jwtAuthenticationToken.getToken().getSubject());
+        String userEmail = jwtAuthenticationToken.getToken().getSubject();
+        return bookService.checkoutBook(userEmail, bookId);
+    }
+
+    @GetMapping("/secure/checkout")
+    public boolean checkoutBookByUser(@RequestParam Long bookId,
+                                      JwtAuthenticationToken jwtAuthenticationToken) {
+        System.out.println("checkoutBookByUser get token: ");
+        System.out.println(jwtAuthenticationToken.getToken().getSubject());
+        String userEmail = jwtAuthenticationToken.getToken().getSubject();
+        return bookService.checkoutBookByUser(userEmail, bookId);
+    }
+
+
+    @GetMapping("/secure/loans")
+    public int currentLoansCount(JwtAuthenticationToken jwtAuthenticationToken) {
+        String userEmail = jwtAuthenticationToken.getToken().getSubject();
+        return bookService.currentLoansCount(userEmail);
+    }
 
 }

@@ -17,6 +17,7 @@ export const Carousel = () => {
     useEffect(() => {
         api.getAllBooks({page: '0', size: '9'}).then((res) => {
             const loadedBooks : BookModel[] = [];
+            console.log("Carousel get all:");
             console.log(res);
             const responsedata = res.data.content;
             for(const key in responsedata) {

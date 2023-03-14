@@ -1,8 +1,10 @@
 package com.selflearn.springbootlibrary.entity;
 
-import jakarta.persistence.*;
+//import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+
 
 import java.util.Date;
 

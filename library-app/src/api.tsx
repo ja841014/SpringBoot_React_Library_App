@@ -11,8 +11,13 @@ export default {
      * @returns 
      */
     getBook(params: any) {
-        console.log(params.id.bookId)
-        return axios.get(`http://localhost:8080/api/books/${params.id.bookId}`);
+        console.log("getBook: " + JSON.stringify(params));
+        return axios.get(`http://localhost:8080/api/books/${params.id}`);
+    },
+
+    getReviewByBookId(params: any) {
+        console.log("getReviewByBookId: " + JSON.stringify(params));
+        return axios.get(`http://localhost:8080/api/reviews/${params.id}`, {params});
     }
 }
 

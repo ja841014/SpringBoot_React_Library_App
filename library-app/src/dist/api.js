@@ -12,8 +12,12 @@ exports["default"] = {
      * @returns
      */
     getBook: function (params) {
-        console.log(params.id.bookId);
-        return axios_1["default"].get("http://localhost:8080/api/books/" + params.id.bookId);
+        console.log("getBook: " + JSON.stringify(params));
+        return axios_1["default"].get("http://localhost:8080/api/books/" + params.id);
+    },
+    getReviewByBookId: function (params) {
+        console.log("getReviewByBookId: " + JSON.stringify(params));
+        return axios_1["default"].get("http://localhost:8080/api/reviews/" + params.id, { params: params });
     }
 };
 /**

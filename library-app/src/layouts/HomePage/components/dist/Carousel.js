@@ -16,6 +16,7 @@ exports.Carousel = function () {
     react_1.useEffect(function () {
         api_1["default"].getAllBooks({ page: '0', size: '9' }).then(function (res) {
             var loadedBooks = [];
+            console.log("Carousel get all:");
             console.log(res);
             var responsedata = res.data.content;
             for (var key in responsedata) {

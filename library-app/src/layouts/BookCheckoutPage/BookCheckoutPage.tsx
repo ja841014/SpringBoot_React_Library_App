@@ -2,22 +2,36 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../../api";
 import BookModel from "../../models/BookModel";
+import ReviewModel from "../../models/ReviewModel";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { StarsReview } from "../Utils/StarsReview";
 import { CheckoutAndReviewBox } from "./CheckoutAndReviewBox";
+import { LatestReviews } from "./LatestReviews";
 
 export const BookCheckoutPage = () => {
+
+    interface BookParams {
+        bookId: string;
+    }
 
     const[book, setBook] = useState<BookModel>();
     const[isLoading, setIsLoading] = useState(true);
     const [httpError, setHttpError] = useState(null);
 
-    const bookId  = useParams();
+    // Review State
+    const [reviews, setReviews] = useState<ReviewModel[]>([]);
+    const [totalStars, setTotalStars] = useState(0);
+    const [isLoadingReview, setIsLoadingReview] = useState(true);
+    // get bookId from url
+    const bookParams  = useParams<BookParams>();
+    const bookId = bookParams.bookId;
 
+    // get book information from backend
     useEffect(() => {
         api.getBook({id: bookId}).then((res) => {
             
             const responsedata = res.data;
+            console.log("book data");
             console.log(responsedata);
 
             const loadedBook : BookModel = {
@@ -37,7 +51,7 @@ export const BookCheckoutPage = () => {
             
             
         }, (error => {
-            console.error("Error")
+            console.error("Loading Book Error")
             setIsLoading(false)
             setHttpError(error.message)
             throw new Error(error.message);
@@ -45,7 +59,47 @@ export const BookCheckoutPage = () => {
 
     }, []); 
 
-    if(isLoading) {
+    useEffect(() => {
+        api.getReviewByBookId({id: bookId, page: 0, size: 10}).then((res) => {
+            const responsedata = res.data.content;
+            console.log("review Data: ");
+            console.log(responsedata);
+
+            const reviews: ReviewModel[] = [];
+
+            let weightedStarReview: number = 0;
+
+            for(const key in responsedata) {
+                reviews.push({
+                    id: responsedata[key].id,
+                    userEmail: responsedata[key].userEmail,
+                    date: responsedata[key].date,
+                    rating: responsedata[key].rating,
+                    book_id: responsedata[key].bookId,
+                    reviewDescription: responsedata[key].reviewDescription,
+                })
+                weightedStarReview = weightedStarReview + responsedata[key].rating;
+                console.log("weightedStarReview: " + weightedStarReview)
+            }
+
+            if(reviews) {
+                const round = (Math.round((weightedStarReview / reviews.length) * 2) / 2).toFixed(1);
+                console.log("round Star: " + weightedStarReview + ", "+ reviews.length + ", "+ round)
+                setTotalStars(Number(round));
+            }
+            setReviews(reviews);
+            setIsLoadingReview(false)
+
+        }, (error => {
+
+            console.error("Loading Review Error")
+            setIsLoadingReview(false)
+            setHttpError(error.message)
+            throw new Error(error.message);
+        }) )
+    }, []);
+
+    if(isLoading || isLoadingReview) {
         return (
             <SpinnerLoading/>
         )
@@ -76,7 +130,7 @@ export const BookCheckoutPage = () => {
                             <h2>{book?.title}</h2>
                             <h5 className='text-primary'>{book?.author}</h5>
                             <p className='lead'>{book?.description}</p>
-                            <StarsReview rating={4} size={32} />
+                            <StarsReview rating={totalStars} size={32} />
                         </div>
                     </div>
                     <CheckoutAndReviewBox book={book} mobile={false} />
@@ -85,7 +139,7 @@ export const BookCheckoutPage = () => {
                         checkoutBook={checkoutBook} isReviewLeft={isReviewLeft} submitReview={submitReview} */}
                 </div>
                 <hr />
-                {/* <LatestReviews reviews={reviews} bookId={book?.id} mobile={false} /> */}
+                <LatestReviews reviews={reviews} bookId={book?.id} mobile={false} />
             </div>
 
             {/** Mobile versino */}
@@ -103,7 +157,7 @@ export const BookCheckoutPage = () => {
                         <h2>{book?.title}</h2>
                         <h5 className='text-primary'>{book?.author}</h5>
                         <p className='lead'>{book?.description}</p>
-                        <StarsReview rating={4} size={32} />
+                        <StarsReview rating={totalStars} size={32} />
                     </div>
                 </div>
                 <CheckoutAndReviewBox book={book} mobile={true} />
@@ -111,7 +165,7 @@ export const BookCheckoutPage = () => {
                     isAuthenticated={authState?.isAuthenticated} isCheckedOut={isCheckedOut} 
                     checkoutBook={checkoutBook} isReviewLeft={isReviewLeft} submitReview={submitReview} */}
                 <hr />
-                {/* <LatestReviews reviews={reviews} bookId={book?.id} mobile={true} /> */}
+                <LatestReviews reviews={reviews} bookId={book?.id} mobile={true} />
             </div>
         </div>
     );
