@@ -22,12 +22,16 @@ public class Checkout {
     @Column(name = "return_date")
     private String returnDate;
 
-    @Column(name = "book_id")
-    private Long bookId;
+    @OneToOne(targetEntity = Book.class, cascade = CascadeType.DETACH)
+    // the name should same as your database name
+    @JoinColumn(name="book_id",
+            referencedColumnName = "id")
+    private Book bookId;
+
 
     public Checkout() {};
 
-    public Checkout(String userEmail, String checkoutDate, String returnDate, Long bookId) {
+    public Checkout(String userEmail, String checkoutDate, String returnDate, Book bookId) {
         this.userEmail = userEmail;
         this.checkoutDate = checkoutDate;
         this.returnDate = returnDate;

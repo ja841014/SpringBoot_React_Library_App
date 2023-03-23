@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import api from "../../api";
 import BookModel from "../../models/BookModel";
 import { Pagination } from "../Utils/Pagination";
@@ -11,10 +12,12 @@ export const SearchBookPage = () => {
     const [books, setBooks] = useState<BookModel[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [httpError, setHttpError] = useState(null);
+
     const [currentPage, setCurrentPage] = useState(1);
     const [booksPerPage] = useState(5);
     const [totalAmountOfBooks, setTotalAmountOfBooks] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
+    
     const [title, setTitle] = useState('');
     const [search, setSearch] = useState('');
     const [categorySelection, setCategorySelection] = useState("Book Category");
@@ -52,12 +55,12 @@ export const SearchBookPage = () => {
 
             // console.log(books)
 
-        }, (error => {
+        }).catch((error) => {
             console.error("Error")
             setIsLoading(false)
             setHttpError(error.message)
             throw new Error(error.message);
-        }))
+        })
         // it will scroll the page to the top
         window.scroll(0, 0);
     }, [currentPage, search, categorySelection]);
@@ -119,29 +122,29 @@ export const SearchBookPage = () => {
                                 </button>
                                 <ul className='dropdown-menu' aria-labelledby='dropdownMenuButton1'>
                                     <li onClick={() => categoryField('All')}>
-                                        <a className='dropdown-item' href='#'>
+                                        <button className='dropdown-item' >
                                             All
-                                        </a>
+                                        </button>
                                     </li>
                                     <li onClick={() => categoryField('FE')}>
-                                        <a className='dropdown-item' href='#'>
+                                        <button className='dropdown-item' >
                                             Front End
-                                        </a>
+                                        </button>
                                     </li>
                                     <li onClick={() => categoryField('BE')}>
-                                        <a className='dropdown-item' href='#'>
+                                        <button className='dropdown-item'>
                                             Back End
-                                        </a>
+                                        </button>
                                     </li>
                                     <li onClick={() => categoryField('Data')}>
-                                        <a className='dropdown-item' href='#'>
+                                        <button className='dropdown-item' >
                                             Data
-                                        </a>
+                                        </button>
                                     </li>
                                     <li onClick={() => categoryField('DevOps')}>
-                                        <a className='dropdown-item' href='#'>
+                                        <button className='dropdown-item'>
                                             DevOps
-                                        </a>
+                                        </button>
                                     </li>
                                 </ul>
                             </div>
@@ -168,8 +171,8 @@ export const SearchBookPage = () => {
                             <h3>
                                 Can't find what you are looking for?
                             </h3>
-                            <a type='button' className='btn btn-primary btn-md px-4 me-md-2 fw-bold text-white'
-                                href='#'>Library Services</a>
+                            <Link type='button' className='btn btn-primary btn-md px-4 me-md-2 fw-bold text-white'
+                                to='/home'>Library Services</Link>
                         </div>
                     }
                     {totalPages > 1 &&

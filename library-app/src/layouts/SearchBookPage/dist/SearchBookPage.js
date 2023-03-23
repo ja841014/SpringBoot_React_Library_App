@@ -2,6 +2,7 @@
 exports.__esModule = true;
 exports.SearchBookPage = void 0;
 var react_1 = require("react");
+var react_router_dom_1 = require("react-router-dom");
 var api_1 = require("../../api");
 var Pagination_1 = require("../Utils/Pagination");
 var SpinnerLoading_1 = require("../Utils/SpinnerLoading");
@@ -42,12 +43,12 @@ exports.SearchBookPage = function () {
             setBooks(loadedBooks);
             setIsLoading(false);
             // console.log(books)
-        }, (function (error) {
+        })["catch"](function (error) {
             console.error("Error");
             setIsLoading(false);
             setHttpError(error.message);
             throw new Error(error.message);
-        }));
+        });
         // it will scroll the page to the top
         window.scroll(0, 0);
     }, [currentPage, search, categorySelection]);
@@ -83,15 +84,15 @@ exports.SearchBookPage = function () {
                             React.createElement("button", { className: 'btn btn-secondary dropdown-toggle', type: 'button', id: 'dropdownMenuButton1', "data-bs-toggle": 'dropdown', "aria-expanded": 'false' }, categorySelection),
                             React.createElement("ul", { className: 'dropdown-menu', "aria-labelledby": 'dropdownMenuButton1' },
                                 React.createElement("li", { onClick: function () { return categoryField('All'); } },
-                                    React.createElement("a", { className: 'dropdown-item', href: '#' }, "All")),
+                                    React.createElement("button", { className: 'dropdown-item' }, "All")),
                                 React.createElement("li", { onClick: function () { return categoryField('FE'); } },
-                                    React.createElement("a", { className: 'dropdown-item', href: '#' }, "Front End")),
+                                    React.createElement("button", { className: 'dropdown-item' }, "Front End")),
                                 React.createElement("li", { onClick: function () { return categoryField('BE'); } },
-                                    React.createElement("a", { className: 'dropdown-item', href: '#' }, "Back End")),
+                                    React.createElement("button", { className: 'dropdown-item' }, "Back End")),
                                 React.createElement("li", { onClick: function () { return categoryField('Data'); } },
-                                    React.createElement("a", { className: 'dropdown-item', href: '#' }, "Data")),
+                                    React.createElement("button", { className: 'dropdown-item' }, "Data")),
                                 React.createElement("li", { onClick: function () { return categoryField('DevOps'); } },
-                                    React.createElement("a", { className: 'dropdown-item', href: '#' }, "DevOps")))))),
+                                    React.createElement("button", { className: 'dropdown-item' }, "DevOps")))))),
                 totalAmountOfBooks > 0 ?
                     React.createElement(React.Fragment, null,
                         React.createElement("div", { className: 'mt-3' },
@@ -110,7 +111,7 @@ exports.SearchBookPage = function () {
                     :
                         React.createElement("div", { className: 'm-5' },
                             React.createElement("h3", null, "Can't find what you are looking for?"),
-                            React.createElement("a", { type: 'button', className: 'btn btn-primary btn-md px-4 me-md-2 fw-bold text-white', href: '#' }, "Library Services")),
+                            React.createElement(react_router_dom_1.Link, { type: 'button', className: 'btn btn-primary btn-md px-4 me-md-2 fw-bold text-white', to: '/home' }, "Library Services")),
                 totalPages > 1 &&
                     React.createElement(Pagination_1.Pagination, { currentPage: currentPage, totalPages: totalPages, paginate: paginate })))));
 };

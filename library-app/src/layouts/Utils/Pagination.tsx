@@ -32,5 +32,5 @@ export const Pagination = (props: any) => {
                 </li>
             </ul>
         </nav>
-    )
+    );
 }

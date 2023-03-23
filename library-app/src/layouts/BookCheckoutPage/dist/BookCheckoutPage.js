@@ -8,23 +8,34 @@ var SpinnerLoading_1 = require("../Utils/SpinnerLoading");
 var StarsReview_1 = require("../Utils/StarsReview");
 var CheckoutAndReviewBox_1 = require("./CheckoutAndReviewBox");
 var LatestReviews_1 = require("./LatestReviews");
+var okta_react_1 = require("@okta/okta-react");
+var ReviewRequestModel_1 = require("../../models/ReviewRequestModel");
 exports.BookCheckoutPage = function () {
-    var _a = react_1.useState(), book = _a[0], setBook = _a[1];
-    var _b = react_1.useState(true), isLoading = _b[0], setIsLoading = _b[1];
-    var _c = react_1.useState(null), httpError = _c[0], setHttpError = _c[1];
+    var authState = okta_react_1.useOktaAuth().authState;
+    var _a = react_1.useState(null), httpError = _a[0], setHttpError = _a[1];
+    var _b = react_1.useState(), book = _b[0], setBook = _b[1];
+    var _c = react_1.useState(true), isLoading = _c[0], setIsLoading = _c[1];
+    // Loans Count state
+    var _d = react_1.useState(0), currentLoansCount = _d[0], setCurrentLoansCount = _d[1];
+    var _e = react_1.useState(true), isLoadingCurrentLoansCount = _e[0], setIsLoadingCurrentLoansCount = _e[1];
     // Review State
-    var _d = react_1.useState([]), reviews = _d[0], setReviews = _d[1];
-    var _e = react_1.useState(0), totalStars = _e[0], setTotalStars = _e[1];
-    var _f = react_1.useState(true), isLoadingReview = _f[0], setIsLoadingReview = _f[1];
+    var _f = react_1.useState([]), reviews = _f[0], setReviews = _f[1];
+    var _g = react_1.useState(true), isLoadingReview = _g[0], setIsLoadingReview = _g[1];
+    var _h = react_1.useState(0), totalStars = _h[0], setTotalStars = _h[1];
     // get bookId from url
     var bookParams = react_router_dom_1.useParams();
     var bookId = bookParams.bookId;
+    // Is Book Check out
+    var _j = react_1.useState(false), isCheckedOut = _j[0], setIsCheckedOut = _j[1];
+    var _k = react_1.useState(true), isLoadingBookCheckedOut = _k[0], setIsLoadingBookCheckedOut = _k[1];
+    //is review left
+    var _l = react_1.useState(false), isReviewLeft = _l[0], setIsReviewLeft = _l[1];
+    var _m = react_1.useState(true), isLoadingUserReview = _m[0], setIsLoadingUserReview = _m[1];
     // get book information from backend
     react_1.useEffect(function () {
-        api_1["default"].getBook({ id: bookId }).then(function (res) {
+        api_1["default"].getBook({ id: bookId })
+            .then(function (res) {
             var responsedata = res.data;
-            console.log("book data");
-            console.log(responsedata);
             var loadedBook = {
                 id: responsedata.id,
                 title: responsedata.title,
@@ -37,18 +48,18 @@ exports.BookCheckoutPage = function () {
             };
             setBook(loadedBook);
             setIsLoading(false);
-        }, (function (error) {
+        })["catch"](function (error) {
             console.error("Loading Book Error");
             setIsLoading(false);
             setHttpError(error.message);
             throw new Error(error.message);
-        }));
-    }, []);
+        });
+    }, [isCheckedOut]);
+    // get book review
     react_1.useEffect(function () {
-        api_1["default"].getReviewByBookId({ id: bookId, page: 0, size: 10 }).then(function (res) {
+        api_1["default"].getReviewByBookId({ id: bookId, page: 0, size: 10 })
+            .then(function (res) {
             var responsedata = res.data.content;
-            console.log("review Data: ");
-            console.log(responsedata);
             var reviews = [];
             var weightedStarReview = 0;
             for (var key in responsedata) {
@@ -61,7 +72,6 @@ exports.BookCheckoutPage = function () {
                     reviewDescription: responsedata[key].reviewDescription
                 });
                 weightedStarReview = weightedStarReview + responsedata[key].rating;
-                console.log("weightedStarReview: " + weightedStarReview);
             }
             if (reviews) {
                 var round = (Math.round((weightedStarReview / reviews.length) * 2) / 2).toFixed(1);
@@ -70,19 +80,125 @@ exports.BookCheckoutPage = function () {
             }
             setReviews(reviews);
             setIsLoadingReview(false);
-        }, (function (error) {
+        })["catch"](function (error) {
             console.error("Loading Review Error");
             setIsLoadingReview(false);
             setHttpError(error.message);
             throw new Error(error.message);
-        }));
-    }, []);
-    if (isLoading || isLoadingReview) {
+        });
+    }, [isReviewLeft]);
+    // to see whether the user leave the review or not
+    react_1.useEffect(function () {
+        if (authState && authState.isAuthenticated) {
+            var requestOptions = oktaHeaderSetup();
+            api_1["default"].isLeftReview({ params: bookId, headers: requestOptions })
+                .then(function (res) {
+                var responseData = res.data;
+                console.log("isLeftReview");
+                console.log(responseData);
+                if (responseData) {
+                    setIsReviewLeft(true);
+                }
+            })["catch"](function (error) {
+                console.error("Loading isLeftReview Error");
+                setIsLoadingUserReview(false);
+                setHttpError(error.message);
+                throw new Error(error.message);
+            });
+        }
+        setIsLoadingUserReview(false);
+    });
+    // get current user's checkout how many book already
+    react_1.useEffect(function () {
+        if (authState && authState.isAuthenticated) {
+            var requestOptions = oktaHeaderSetup();
+            api_1["default"].getCurrentLoansCountByUser({ requestOptions: requestOptions })
+                .then(function (res) {
+                var responsedata = res.data;
+                console.log("getCurrentLoansCountByUser");
+                console.log(responsedata);
+                setCurrentLoansCount(responsedata);
+            })["catch"](function (error) {
+                console.error("Loading LoadingCurrentLoansCount Error");
+                setIsLoadingCurrentLoansCount(false);
+                setHttpError(error.message);
+                throw new Error(error.message);
+            });
+        }
+        setIsLoadingCurrentLoansCount(false);
+    }, [authState, isCheckedOut]);
+    // get current user checkout current book or not
+    react_1.useEffect(function () {
+        if (authState && authState.isAuthenticated) {
+            var requestOptions = oktaHeaderSetup();
+            api_1["default"].isCheckoutByUser({ params: bookId, headers: requestOptions })
+                .then(function (res) {
+                var responseData = res.data;
+                console.log("isCheckoutByUser");
+                console.log(responseData);
+                if (responseData) {
+                    setIsCheckedOut(true);
+                }
+            })["catch"](function (error) {
+                console.error("Loading LoadingCurrentLoansCount Error");
+                setIsLoadingBookCheckedOut(false);
+                setHttpError(error.message);
+                throw new Error(error.message);
+            });
+        }
+        setIsLoadingBookCheckedOut(false);
+    }, [authState]);
+    if (isLoading || isLoadingReview || isLoadingCurrentLoansCount || isLoadingBookCheckedOut || isLoadingUserReview) {
         return (React.createElement(SpinnerLoading_1.SpinnerLoading, null));
     }
     if (httpError) {
         return (React.createElement("div", { className: "container m-5" },
             React.createElement("p", null, httpError)));
+    }
+    function checkoutBook() {
+        var requestOptions = oktaHeaderSetup();
+        api_1["default"].checkoutBook({ params: bookId, headers: requestOptions })
+            .then(function (res) {
+            var responseData = res.data;
+            console.log("checkoutBook");
+            if (responseData) {
+                setIsCheckedOut(true);
+            }
+        })["catch"](function (error) {
+            console.error("Loading checkoutBook Error");
+            setIsLoadingBookCheckedOut(false);
+            setHttpError(error.message);
+            throw new Error(error.message);
+        });
+    }
+    function submitReview(star, reviewDescription) {
+        var requestOptions = oktaHeaderSetup();
+        var bookId = 0;
+        if (book === null || book === void 0 ? void 0 : book.id) {
+            bookId = book.id;
+        }
+        var reviewRequestModel = new ReviewRequestModel_1["default"](star, bookId, reviewDescription);
+        api_1["default"].submitReview({ data: reviewRequestModel, headers: requestOptions })
+            .then(function (res) {
+            var responseData = res.data;
+            console.log("submitReview");
+            console.log(responseData);
+            setIsReviewLeft(true);
+        })["catch"](function (error) {
+            console.error("submitReview Error");
+            setHttpError(error.message);
+            throw new Error(error.message);
+        });
+    }
+    function oktaHeaderSetup() {
+        var _a;
+        var requestOptions = {
+            headers: {
+                "Authorization": "Bearer " + ((_a = authState === null || authState === void 0 ? void 0 : authState.accessToken) === null || _a === void 0 ? void 0 : _a.accessToken),
+                "Content-Type": 'application/json'
+            }
+        };
+        return requestOptions;
     }
     return (React.createElement("div", null,
         React.createElement("div", { className: 'container d-none d-lg-block' },
@@ -97,7 +213,7 @@ exports.BookCheckoutPage = function () {
                         React.createElement("h5", { className: 'text-primary' }, book === null || book === void 0 ? void 0 : book.author),
                         React.createElement("p", { className: 'lead' }, book === null || book === void 0 ? void 0 : book.description),
                         React.createElement(StarsReview_1.StarsReview, { rating: totalStars, size: 32 }))),
-                React.createElement(CheckoutAndReviewBox_1.CheckoutAndReviewBox, { book: book, mobile: false })),
+                React.createElement(CheckoutAndReviewBox_1.CheckoutAndReviewBox, { book: book, mobile: false, currentLoansCount: currentLoansCount, isCheckedOut: isCheckedOut, isAuthenticated: authState === null || authState === void 0 ? void 0 : authState.isAuthenticated, checkoutBook: checkoutBook, isReviewLeft: isReviewLeft, submitReview: submitReview })),
             React.createElement("hr", null),
             React.createElement(LatestReviews_1.LatestReviews, { reviews: reviews, bookId: book === null || book === void 0 ? void 0 : book.id, mobile: false })),
         React.createElement("div", { className: 'container d-lg-none mt-5' },
@@ -111,7 +227,7 @@ exports.BookCheckoutPage = function () {
                     React.createElement("h5", { className: 'text-primary' }, book === null || book === void 0 ? void 0 : book.author),
                     React.createElement("p", { className: 'lead' }, book === null || book === void 0 ? void 0 : book.description),
                     React.createElement(StarsReview_1.StarsReview, { rating: totalStars, size: 32 }))),
-            React.createElement(CheckoutAndReviewBox_1.CheckoutAndReviewBox, { book: book, mobile: true }),
+            React.createElement(CheckoutAndReviewBox_1.CheckoutAndReviewBox, { book: book, mobile: true, currentLoansCount: currentLoansCount, isCheckedOut: isCheckedOut, isAuthenticated: authState === null || authState === void 0 ? void 0 : authState.isAuthenticated, checkoutBook: checkoutBook, isReviewLeft: isReviewLeft, submitReview: submitReview }),
             React.createElement("hr", null),
             React.createElement(LatestReviews_1.LatestReviews, { reviews: reviews, bookId: book === null || book === void 0 ? void 0 : book.id, mobile: true }))));
 };

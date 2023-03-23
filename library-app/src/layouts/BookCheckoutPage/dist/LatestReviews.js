@@ -11,7 +11,7 @@ exports.LatestReviews = function (props) {
             React.createElement(React.Fragment, null,
                 props.reviews.slice(0, 3).map(function (eachReview) { return (React.createElement(Review_1.Review, { review: eachReview, key: eachReview.id })); }),
                 React.createElement("div", { className: 'm-3' },
-                    React.createElement(react_router_dom_1.Link, { type: 'button', className: 'btn main-color btn-md text-white', to: "/reviewlist/" + props.bookId }, "Reach all reviews.")))
+                    React.createElement(react_router_dom_1.Link, { type: 'button', className: 'btn btn-primary btn-md text-white', to: "/reviewlist/" + props.bookId }, "Reach all reviews.")))
             :
                 React.createElement("div", { className: 'm-3' },
                     React.createElement("p", { className: 'lead' }, "Currently there are no reviews for this book")))));

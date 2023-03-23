@@ -1,4 +1,58 @@
+import { Link } from "react-router-dom"
+import api from "../../api"
+import { LeaveAReview } from "../Utils/LeaveAReview"
+
+
 export const CheckoutAndReviewBox = (props: any) => {
+
+
+    function buttonRender() {
+        if(!props.isAuthenticated) {
+            return (
+                <Link to={'/login'} className="btn btn-success btn-lg">Sign In</Link>
+            )
+        }
+        
+        if(!props.isCheckedOut && props.currentLoansCount < 5) {
+            return (
+                <button className="btn btn-success btn-lg" onClick={() => props.checkoutBook()}>Checkout</button>
+            )
+        }
+        else if(props.isCheckedOut) {
+            return (
+                <p><b>Book checked out. Enjoy.</b></p>
+            )
+        }
+        else if(props.currentLoansCount >= 5) {
+            return (
+                <p className="text-danger">Too many book checked out.</p>
+            )
+        }
+    }
+
+    function reviewRender() {
+        if(!props.isAuthenticated) {
+            return(
+                <div>
+                    <hr/>
+                    <p>Sign in to be able to leave a review.</p>
+                </div>
+            );
+        }
+       
+        if(props.isReviewLeft) {
+            return(
+                <p><b>Thank you for your review!</b></p>
+            );
+        }
+        else {
+            return(
+                <LeaveAReview submitReview={ props.submitReview }/>
+            );
+        }
+    }
+
+    
     return (
         <div className={props.mobile ? 'card d-flex mt-5' : 'card col-3 container d-flex mb-5'}>
             <div className='card-body container'>
@@ -28,12 +82,12 @@ export const CheckoutAndReviewBox = (props: any) => {
                         </p>
                     </div>
                 </div>
-                {/* {buttonRender()} */}
+                {buttonRender()}
                 <hr />
                 <p className='mt-3'>
                     This number can change until placing order has been complete.
                 </p>
-                {/* {reviewRender()} */}
+                {reviewRender()}
             </div>
         </div>
     );

@@ -49,6 +49,8 @@ var okta_auth_js_1 = require("@okta/okta-auth-js");
 var okta_react_1 = require("@okta/okta-react");
 var oktaConfig_1 = require("./lib/oktaConfig");
 var LoginWidget_1 = require("./Auth/LoginWidget");
+var ReviewListPage_1 = require("./layouts/BookCheckoutPage/ReviewListPage");
+var ShelfPage_1 = require("./layouts/ShelfPage/ShelfPage");
 exports.App = function () {
     var oktaAuth = new okta_auth_js_1.OktaAuth(oktaConfig_1.oktaConfig);
     var history = react_router_dom_1.useHistory();
@@ -73,9 +75,13 @@ exports.App = function () {
                         react_1["default"].createElement(HomePage_1.HomePage, null)),
                     react_1["default"].createElement(react_router_dom_1.Route, { path: '/search' },
                         react_1["default"].createElement(SearchBookPage_1.SearchBookPage, null)),
+                    react_1["default"].createElement(react_router_dom_1.Route, { path: '/reviewlist/:bookId' },
+                        react_1["default"].createElement(ReviewListPage_1.ReviewListPage, null)),
                     react_1["default"].createElement(react_router_dom_1.Route, { path: '/checkout/:bookId' },
                         react_1["default"].createElement(BookCheckoutPage_1.BookCheckoutPage, null)),
                     react_1["default"].createElement(react_router_dom_1.Route, { path: '/login', render: function () { return react_1["default"].createElement(LoginWidget_1["default"], { oktaConfig: oktaConfig_1.oktaConfig }); } }),
-                    react_1["default"].createElement(react_router_dom_1.Route, { path: '/login/callback', component: okta_react_1.LoginCallback }))),
+                    react_1["default"].createElement(react_router_dom_1.Route, { path: '/login/callback', component: okta_react_1.LoginCallback }),
+                    react_1["default"].createElement(okta_react_1.SecureRoute, { path: '/shelf' },
+                        react_1["default"].createElement(ShelfPage_1.ShelfPage, null)))),
             react_1["default"].createElement(Footer_1.Footer, null))));
 };

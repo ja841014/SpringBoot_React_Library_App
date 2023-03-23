@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useInsertionEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../../api";
 import BookModel from "../../models/BookModel";
@@ -7,6 +7,9 @@ import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { StarsReview } from "../Utils/StarsReview";
 import { CheckoutAndReviewBox } from "./CheckoutAndReviewBox";
 import { LatestReviews } from "./LatestReviews";
+import { useOktaAuth } from '@okta/okta-react';
+import ReviewRequestModel from "../../models/ReviewRequestModel";
+
 
 export const BookCheckoutPage = () => {
 
@@ -14,25 +17,38 @@ export const BookCheckoutPage = () => {
         bookId: string;
     }
 
+    const { authState } = useOktaAuth();
+    const [httpError, setHttpError] = useState(null);
+
     const[book, setBook] = useState<BookModel>();
     const[isLoading, setIsLoading] = useState(true);
-    const [httpError, setHttpError] = useState(null);
+
+    // Loans Count state
+    const [currentLoansCount, setCurrentLoansCount] = useState(0);
+    const[isLoadingCurrentLoansCount, setIsLoadingCurrentLoansCount] = useState(true);
 
     // Review State
     const [reviews, setReviews] = useState<ReviewModel[]>([]);
-    const [totalStars, setTotalStars] = useState(0);
     const [isLoadingReview, setIsLoadingReview] = useState(true);
+    const [totalStars, setTotalStars] = useState(0);
+
     // get bookId from url
     const bookParams  = useParams<BookParams>();
     const bookId = bookParams.bookId;
 
+    // Is Book Check out
+    const[isCheckedOut, setIsCheckedOut] = useState(false)
+    const[isLoadingBookCheckedOut, setIsLoadingBookCheckedOut] = useState(true);
+
+    //is review left
+    const[isReviewLeft, setIsReviewLeft] = useState(false);
+    const[isLoadingUserReview, setIsLoadingUserReview] = useState(true);
+
     // get book information from backend
     useEffect(() => {
-        api.getBook({id: bookId}).then((res) => {
-            
+        api.getBook({id: bookId})
+        .then((res) => {
             const responsedata = res.data;
-            console.log("book data");
-            console.log(responsedata);
 
             const loadedBook : BookModel = {
                 id : responsedata.id,
@@ -45,25 +61,23 @@ export const BookCheckoutPage = () => {
                 img: responsedata.img,
             };
             
-            
             setBook(loadedBook);
             setIsLoading(false);
             
-            
-        }, (error => {
+        })
+        .catch((error) => {
             console.error("Loading Book Error")
             setIsLoading(false)
             setHttpError(error.message)
             throw new Error(error.message);
-        }))
+        })
 
-    }, []); 
-
+    }, [isCheckedOut]); 
+    // get book review
     useEffect(() => {
-        api.getReviewByBookId({id: bookId, page: 0, size: 10}).then((res) => {
+        api.getReviewByBookId({id: bookId, page: 0, size: 10})
+        .then((res) => {
             const responsedata = res.data.content;
-            console.log("review Data: ");
-            console.log(responsedata);
 
             const reviews: ReviewModel[] = [];
 
@@ -79,7 +93,6 @@ export const BookCheckoutPage = () => {
                     reviewDescription: responsedata[key].reviewDescription,
                 })
                 weightedStarReview = weightedStarReview + responsedata[key].rating;
-                console.log("weightedStarReview: " + weightedStarReview)
             }
 
             if(reviews) {
@@ -90,16 +103,91 @@ export const BookCheckoutPage = () => {
             setReviews(reviews);
             setIsLoadingReview(false)
 
-        }, (error => {
+        })
+        .catch((error) => {
 
             console.error("Loading Review Error")
             setIsLoadingReview(false)
             setHttpError(error.message)
             throw new Error(error.message);
-        }) )
-    }, []);
+        })
+    }, [isReviewLeft]);
+    // to see whether the user leave the review or not
+    useEffect(() => {
+        if(authState && authState.isAuthenticated) {
 
-    if(isLoading || isLoadingReview) {
+            const requestOptions = oktaHeaderSetup();
+
+            api.isLeftReview({params: bookId, headers: requestOptions})
+            .then((res) => {
+                const responseData = res.data;
+                console.log("isLeftReview");
+                console.log(responseData);
+                if(responseData) {
+                    setIsReviewLeft(true);
+                }
+            })
+            .catch((error) => {
+                console.error("Loading isLeftReview Error")
+                setIsLoadingUserReview(false)
+                setHttpError(error.message)
+                throw new Error(error.message);
+            })
+        }
+        setIsLoadingUserReview(false)
+    })
+    // get current user's checkout how many book already
+    useEffect(() => {
+        if(authState && authState.isAuthenticated) {
+
+            const requestOptions = oktaHeaderSetup();
+
+            api.getCurrentLoansCountByUser({requestOptions: requestOptions})
+            .then((res) => {
+                const responsedata = res.data;
+                console.log("getCurrentLoansCountByUser");
+                console.log(responsedata);
+                setCurrentLoansCount(responsedata);
+
+            })
+            .catch( (error) => {
+                console.error("Loading LoadingCurrentLoansCount Error")
+                setIsLoadingCurrentLoansCount(false)
+                setHttpError(error.message)
+                throw new Error(error.message);
+            })
+        }
+        setIsLoadingCurrentLoansCount(false);
+        
+    }, [authState, isCheckedOut]);
+    // get current user checkout current book or not
+    useEffect(() => {
+        
+        if(authState && authState.isAuthenticated) {
+
+            const requestOptions = oktaHeaderSetup();
+
+            api.isCheckoutByUser({params: bookId, headers: requestOptions})
+            .then((res) => {
+                const responseData = res.data;
+                console.log("isCheckoutByUser");
+                console.log(responseData);
+                if(responseData) {
+                    setIsCheckedOut(true);
+                }
+            })
+            .catch((error) => {
+                console.error("Loading LoadingCurrentLoansCount Error")
+                setIsLoadingBookCheckedOut(false)
+                setHttpError(error.message)
+                throw new Error(error.message);
+            })
+        }
+        setIsLoadingBookCheckedOut(false)
+
+    }, [authState])
+
+    if(isLoading || isLoadingReview || isLoadingCurrentLoansCount || isLoadingBookCheckedOut || isLoadingUserReview) {
         return (
             <SpinnerLoading/>
         )
@@ -111,6 +199,59 @@ export const BookCheckoutPage = () => {
                 <p>{httpError}</p>
             </div>
         )
+    }
+
+    function checkoutBook() {
+        const requestOptions = oktaHeaderSetup();
+    
+        api.checkoutBook({params: bookId, headers: requestOptions})
+        .then((res) => {
+            const responseData = res.data;
+            console.log("checkoutBook");
+            if(responseData) {
+                setIsCheckedOut(true);
+            }
+        })
+        .catch((error) => {
+            console.error("Loading checkoutBook Error")
+            setIsLoadingBookCheckedOut(false)
+            setHttpError(error.message)
+            throw new Error(error.message);
+        })
+    }
+
+    function submitReview(star: number, reviewDescription: string) {
+
+        const requestOptions = oktaHeaderSetup();
+        let bookId: number = 0;
+        if(book?.id) {
+            bookId = book.id;
+        }
+        const reviewRequestModel = new ReviewRequestModel(star, bookId, reviewDescription);
+
+        api.submitReview({data: reviewRequestModel, headers: requestOptions})
+        .then((res) => {
+            const responseData = res.data;
+            console.log("submitReview");
+            console.log(responseData);
+            setIsReviewLeft(true);
+
+        })
+        .catch((error) => {
+            console.error("submitReview Error")
+            setHttpError(error.message)
+            throw new Error(error.message);
+        })
+    }
+
+    function oktaHeaderSetup() {
+        const requestOptions = {
+            headers : {
+                "Authorization": `Bearer ${authState?.accessToken?.accessToken}`,
+                "Content-Type": 'application/json'
+            }
+        };
+        return requestOptions;
     }
 
     return(
@@ -133,10 +274,11 @@ export const BookCheckoutPage = () => {
                             <StarsReview rating={totalStars} size={32} />
                         </div>
                     </div>
-                    <CheckoutAndReviewBox book={book} mobile={false} />
-                    {/* currentLoansCount={currentLoansCount} 
-                        isAuthenticated={authState?.isAuthenticated} isCheckedOut={isCheckedOut} 
-                        checkoutBook={checkoutBook} isReviewLeft={isReviewLeft} submitReview={submitReview} */}
+                    <CheckoutAndReviewBox book={book} mobile={false} currentLoansCount={currentLoansCount} 
+                        isCheckedOut={isCheckedOut} isAuthenticated={authState?.isAuthenticated} checkoutBook={checkoutBook}
+                        isReviewLeft = {isReviewLeft} submitReview = {submitReview}
+                    />
+                    
                 </div>
                 <hr />
                 <LatestReviews reviews={reviews} bookId={book?.id} mobile={false} />
@@ -160,10 +302,11 @@ export const BookCheckoutPage = () => {
                         <StarsReview rating={totalStars} size={32} />
                     </div>
                 </div>
-                <CheckoutAndReviewBox book={book} mobile={true} />
-                {/* currentLoansCount={currentLoansCount} 
-                    isAuthenticated={authState?.isAuthenticated} isCheckedOut={isCheckedOut} 
-                    checkoutBook={checkoutBook} isReviewLeft={isReviewLeft} submitReview={submitReview} */}
+                <CheckoutAndReviewBox book={book} mobile={true} currentLoansCount={currentLoansCount} 
+                    isCheckedOut={isCheckedOut} isAuthenticated={authState?.isAuthenticated} checkoutBook={checkoutBook}
+                    isReviewLeft = {isReviewLeft} submitReview = {submitReview}
+                />
+                
                 <hr />
                 <LatestReviews reviews={reviews} bookId={book?.id} mobile={true} />
             </div>

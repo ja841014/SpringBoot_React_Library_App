@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 
 import java.util.Date;
+import java.util.Optional;
 
 @Entity
 @Table(name = "review")
@@ -31,4 +32,14 @@ public class Review {
 
     @Column(name = "review_description")
     private String reviewDescription;
+
+    public Review() {};
+
+    public Review(Long bookId, double rating, String userEmail, String reviewDescription, Date date) {
+        this.bookId = bookId;
+        this.rating = rating;
+        this.userEmail = userEmail;
+        this.reviewDescription = reviewDescription;
+        this.date = date;
+    }
 }

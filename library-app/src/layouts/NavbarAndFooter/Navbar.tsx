@@ -20,7 +20,7 @@ export const Navbar = () => {
   return (
     <nav className='navbar navbar-expand-lg navbar-dark main-color py-3'>
       <div className='container-fluid'>
-        <span className='navbar-brand'>Luv 2 Read</span>
+        <Link type="button" className='navbar-brand' to={"/home"}>Luv 2 Read</Link>
         <button className='navbar-toggler' type='button'
           data-bs-toggle='collapse' data-bs-target='#navbarNavDropdown'
           aria-controls='navbarNavDropdown' aria-expanded='false'
@@ -30,12 +30,24 @@ export const Navbar = () => {
         </button>
         <div className='collapse navbar-collapse' id='navbarNavDropdown'>
           <ul className='navbar-nav'>
+
             <li className='nav-item'>
               <NavLink className="nav-link" to="/home">Home</NavLink>
             </li>
+
             <li className='nav-item'>
               <NavLink className="nav-link" to="/search">Search Book</NavLink>
             </li>
+            
+            {/*  you can see the below shelf tab only if you login*/}
+            {
+              authState.isAuthenticated &&
+              <li className='nav-item'>
+                <NavLink className="nav-link" to="/shelf">Shelf</NavLink>
+              </li>
+            }
+              
+            
           </ul>
           <ul className='navbar-nav ms-auto'>
 
