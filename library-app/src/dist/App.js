@@ -51,6 +51,8 @@ var oktaConfig_1 = require("./lib/oktaConfig");
 var LoginWidget_1 = require("./Auth/LoginWidget");
 var ReviewListPage_1 = require("./layouts/BookCheckoutPage/ReviewListPage");
 var ShelfPage_1 = require("./layouts/ShelfPage/ShelfPage");
+var MessagePage_1 = require("./layouts/MessagePage/MessagePage");
+var ManageLibraryPage_1 = require("./layouts/ManageLibraryPage/ManageLibraryPage");
 exports.App = function () {
     var oktaAuth = new okta_auth_js_1.OktaAuth(oktaConfig_1.oktaConfig);
     var history = react_router_dom_1.useHistory();
@@ -82,6 +84,10 @@ exports.App = function () {
                     react_1["default"].createElement(react_router_dom_1.Route, { path: '/login', render: function () { return react_1["default"].createElement(LoginWidget_1["default"], { oktaConfig: oktaConfig_1.oktaConfig }); } }),
                     react_1["default"].createElement(react_router_dom_1.Route, { path: '/login/callback', component: okta_react_1.LoginCallback }),
                     react_1["default"].createElement(okta_react_1.SecureRoute, { path: '/shelf' },
-                        react_1["default"].createElement(ShelfPage_1.ShelfPage, null)))),
+                        react_1["default"].createElement(ShelfPage_1.ShelfPage, null)),
+                    react_1["default"].createElement(okta_react_1.SecureRoute, { path: '/messages' },
+                        react_1["default"].createElement(MessagePage_1.MessagePage, null)),
+                    react_1["default"].createElement(okta_react_1.SecureRoute, { path: '/admin' },
+                        react_1["default"].createElement(ManageLibraryPage_1.ManageLibraryPage, null)))),
             react_1["default"].createElement(Footer_1.Footer, null))));
 };

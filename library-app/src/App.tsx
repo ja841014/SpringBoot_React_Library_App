@@ -14,6 +14,8 @@ import { oktaConfig } from './lib/oktaConfig';
 import LoginWidget from './Auth/LoginWidget';
 import { ReviewListPage } from './layouts/BookCheckoutPage/ReviewListPage';
 import { ShelfPage } from './layouts/ShelfPage/ShelfPage';
+import { MessagePage } from './layouts/MessagePage/MessagePage';
+import { ManageLibraryPage } from './layouts/ManageLibraryPage/ManageLibraryPage';
 
 export const App = () => {
 
@@ -64,8 +66,14 @@ export const App = () => {
               <SecureRoute path='/shelf'> 
                 <ShelfPage/> 
               </SecureRoute>
-              {/* <SecureRoute path='/messages'> <MessagesPage/> </SecureRoute>
-              <SecureRoute path='/admin'> <ManageLibraryPage/> </SecureRoute> */}
+
+              <SecureRoute path='/messages'> 
+                <MessagePage/> 
+              </SecureRoute>
+              
+              <SecureRoute path='/admin'> 
+                <ManageLibraryPage/> 
+              </SecureRoute>
 
             </Switch>
           </div>

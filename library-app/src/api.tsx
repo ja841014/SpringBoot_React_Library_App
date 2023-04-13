@@ -29,7 +29,7 @@ export default {
     isCheckoutByUser(req : any) {
         const {headers, params}  = req;
         
-        console.log("isCheckoutByUser" + JSON.stringify(req));
+        console.log("API GET isCheckoutByUser" + JSON.stringify(req));
 
         let config = {
             "headers": headers.headers, // {"Authorization":.....}
@@ -40,7 +40,7 @@ export default {
     },
     // checkout a book
     checkoutBook(req : any) {
-        console.log("checkoutBook" + JSON.stringify(req));
+        console.log("API PUT checkoutBook" + JSON.stringify(req));
 
         const {headers, params}  = req;
         let config = {
@@ -58,6 +58,10 @@ export default {
             "headers": headers.headers, // {"Authorization":.....}
             "params": {"bookId": params}
         }
+
+        console.log("API GET isLeftReview")
+        console.log(req);
+
         return axios.get(`http://localhost:8080/api/reviews/secure/books`, config);
     },
     // submit a review
@@ -66,6 +70,7 @@ export default {
         let config = {
             "headers": headers.headers, // {"Authorization":.....}
         }
+        console.log("API POST submitReview")
         console.log(req);
         /**
          * headers
@@ -80,6 +85,7 @@ export default {
         let config = {
             "headers": headers.headers, // {"Authorization":.....}
         }
+        console.log("API GET getLoansDetail")
         console.log(req);
         /**
          * headers
@@ -95,6 +101,8 @@ export default {
             "headers": headers.headers, // {"Authorization":.....}
             "params": {"bookId": params}
         }
+        console.log("API PUT returnBook")
+        console.log(req)
         return axios.put(`http://localhost:8080/api/secure/return`, null, config);
     },
 
@@ -104,8 +112,8 @@ export default {
             "headers": headers.headers, // {"Authorization":.....}
             "params": {"bookId": params}
         }
-        console.log("API Put renewLoan()")
-        console.log(config)
+        console.log("API PUT renewLoan()")
+        console.log(req)
         return axios.put(`http://localhost:8080/api/secure/renewloan`, null, config);
     },
 
@@ -123,6 +131,66 @@ export default {
          * params
          */
         return axios.get(`http://localhost:8080/api/histories/secure/`, config);
-    }
+    },
+
+    submitNewQuestion(req: any) {
+        const {headers, data}  = req;
+        let config = {
+            "headers": headers, // {"Authorization":.....}
+        }
+        console.log("API POST submitNewQuestion");
+        console.log(req);
+
+        return axios.post(`http://localhost:8080/api/messages/secure/`, data, config);
+    },
+
+    getAllQuestionByUserEmail(req: any) {
+        const {headers, params}  = req;
+        let config = {
+            "headers": headers.headers, // {"Authorization":.....}
+            "params" : params,
+        }
+        console.log("API GET getAllQuestionByUserEmail");
+        console.log(req);
+
+        return axios.get(`http://localhost:8080/api/messages/secure/`, config);
+    },
+
+    getAllQuestionByClosed(req: any) {
+        const {headers, params}  = req;
+        let config = {
+            "headers": headers.headers, // {"Authorization":.....}
+            "params" : params,
+        }
+        console.log("API GET getAllQuestionByClosed");
+        console.log(req);
+
+        return axios.get(`http://localhost:8080/api/messages/secure/admin`, config);
+    },
+
+    submitQuestionResponse(req: any) {
+        const {headers, data}  = req;
+        const config = {
+            "headers": headers.headers
+        }
+        console.log("API PUT submitQuestionResponse");
+        console.log(req);
+        return axios.put(`http://localhost:8080/api/messages/secure/admin`, data, config)
+    },
+
+    addNewBook(req: any) {
+        const {headers, data}  = req;
+        let config = {
+            "headers": headers, // {"Authorization":.....}
+        }
+        console.log("API POST addNewBook");
+        console.log(req);
+
+        return axios.post(`http://localhost:8080/api/admin/secure/book/`, data, config);
+    },
+
+
+
+
 
 }

@@ -25,6 +25,7 @@ exports.HistoryPage = function () {
             api_1["default"].getHistory({ headers: requestOptions, params: params })
                 .then(function (res) {
                 var responseData = res.data.content;
+                console.log("getHistory() response:");
                 console.log(responseData);
                 setTotalAmountOfHistories(res.data.totalElements);
                 setTotalPages(res.data.totalPages);
@@ -63,45 +64,43 @@ exports.HistoryPage = function () {
         return (React.createElement("div", { className: 'container m-5' },
             React.createElement("p", null, httpError)));
     }
-    // const indexOfLastBook: number = currentPage * historiesPerPage;
-    // const indexOfFirstBook: number = indexOfLastBook - historiesPerPage;
-    // let lastItemIdx = historiesPerPage * currentPage <= totalAmountOfHistories ? historiesPerPage * currentPage : totalAmountOfHistories
     var paginate = function (pageNumber) { return setCurrentPage(pageNumber); };
     return (React.createElement("div", { className: 'mt-2' },
-        histories.length > 0 ?
-            React.createElement(React.Fragment, null,
-                React.createElement("h5", null, "Recent History:"),
-                histories.map(function (history) { return (React.createElement("div", { key: history.id },
-                    React.createElement("div", { className: 'card mt-3 shadow p-3 mb-3 bg-body rounded' },
-                        React.createElement("div", { className: 'row g-0' },
-                            React.createElement("div", { className: 'col-md-2' },
-                                React.createElement("div", { className: 'd-none d-lg-block' }, history.img ?
-                                    React.createElement("img", { src: history.img, width: '123', height: '196', alt: 'Book' })
-                                    :
-                                        React.createElement("img", { src: require('./../../../Images/BooksImages/book-luv2code-1000.png'), width: '123', height: '196', alt: 'Default' })),
-                                React.createElement("div", { className: 'd-lg-none d-flex justify-content-center align-items-center' }, history.img ?
-                                    React.createElement("img", { src: history.img, width: '123', height: '196', alt: 'Book' })
-                                    :
-                                        React.createElement("img", { src: require('./../../../Images/BooksImages/book-luv2code-1000.png'), width: '123', height: '196', alt: 'Default' }))),
-                            React.createElement("div", { className: 'col' },
-                                React.createElement("div", { className: 'card-body' },
-                                    React.createElement("h5", { className: 'card-title' },
-                                        " ",
-                                        history.author,
-                                        " "),
-                                    React.createElement("h4", null, history.title),
-                                    React.createElement("p", { className: 'card-text' }, history.description),
-                                    React.createElement("hr", null),
-                                    React.createElement("p", { className: 'card-text' },
-                                        " Checked out on: ",
-                                        history.checkoutDate),
-                                    React.createElement("p", { className: 'card-text' },
-                                        " Returned on: ",
-                                        history.returnDate))))),
-                    React.createElement("hr", null))); }))
+        histories.length > 0
+            ?
+                React.createElement(React.Fragment, null,
+                    React.createElement("h5", null, "Recent History:"),
+                    histories.map(function (history) { return (React.createElement("div", { key: history.id },
+                        React.createElement("div", { className: 'card mt-3 shadow p-3 mb-3 bg-body rounded' },
+                            React.createElement("div", { className: 'row g-0' },
+                                React.createElement("div", { className: 'col-md-2' },
+                                    React.createElement("div", { className: 'd-none d-lg-block' }, history.img ?
+                                        React.createElement("img", { src: history.img, width: '123', height: '196', alt: 'Book' })
+                                        :
+                                            React.createElement("img", { src: require('./../../../Images/BooksImages/book-luv2code-1000.png'), width: '123', height: '196', alt: 'Default' })),
+                                    React.createElement("div", { className: 'd-lg-none d-flex justify-content-center align-items-center' }, history.img ?
+                                        React.createElement("img", { src: history.img, width: '123', height: '196', alt: 'Book' })
+                                        :
+                                            React.createElement("img", { src: require('./../../../Images/BooksImages/book-luv2code-1000.png'), width: '123', height: '196', alt: 'Default' }))),
+                                React.createElement("div", { className: 'col' },
+                                    React.createElement("div", { className: 'card-body' },
+                                        React.createElement("h5", { className: 'card-title' },
+                                            " ",
+                                            history.author,
+                                            " "),
+                                        React.createElement("h4", null, history.title),
+                                        React.createElement("p", { className: 'card-text' }, history.description),
+                                        React.createElement("hr", null),
+                                        React.createElement("p", { className: 'card-text' },
+                                            " Checked out on: ",
+                                            history.checkoutDate),
+                                        React.createElement("p", { className: 'card-text' },
+                                            " Returned on: ",
+                                            history.returnDate))))),
+                        React.createElement("hr", null))); }))
             :
                 React.createElement(React.Fragment, null,
                     React.createElement("h3", { className: 'mt-3' }, "Currently no history: "),
-                    React.createElement(react_router_dom_1.Link, { className: 'btn btn-primary', to: 'search' }, "Search for new book")),
+                    React.createElement(react_router_dom_1.Link, { className: 'btn btn-primary', to: '/search' }, "Search for new book")),
         totalPages > 1 && React.createElement(Pagination_1.Pagination, { currentPage: currentPage, totalPages: totalPages, paginate: paginate })));
 };

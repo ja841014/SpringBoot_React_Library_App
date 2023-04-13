@@ -11,7 +11,7 @@ exports.LibraryServices = function () {
                 React.createElement("h1", { className: 'display-4 fw-bold' }, "Can't find what you are looking for?"),
                 React.createElement("p", { className: 'lead' }, "If you cannot find what you are looking for, send our library admin's a personal message!"),
                 React.createElement("div", { className: 'd-grid gap-2 justify-content-md-start mb-4 mb-lg-3' }, (authState === null || authState === void 0 ? void 0 : authState.isAuthenticated) ?
-                    React.createElement(react_router_dom_1.Link, { className: "btn btn-primary btn-lg text-white px-4 me-md-2 fw-bold", type: 'button', to: "/" }, "Library Services")
+                    React.createElement(react_router_dom_1.Link, { className: "btn btn-primary btn-lg text-white px-4 me-md-2 fw-bold", type: 'button', to: "/messages" }, "Library Services")
                     :
                         React.createElement(react_router_dom_1.Link, { className: "btn btn-primary btn-lg text-white px-4 me-md-2 fw-bold", type: 'button', to: "/login" }, "Sign Up"))),
             React.createElement("div", { className: 'col-lg-4 offset-lg-1 shadow-lg lost-image' }))));

@@ -21,7 +21,9 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests( configurer ->
                 configurer.antMatchers("/api/secure/**",
                                 "/api/reviews/secure/**",
-                                "/api/history/secure/**") // this step is filter what path we want to protect it.
+                                "/api/history/secure/**",
+                                "/api/messages/secure/**",
+                                "/api/admin/secure/**") // this step is filter what path we want to protect it.
                         .authenticated()) // this step is to specify how we want to protect it
             .oauth2ResourceServer()
             .jwt();
