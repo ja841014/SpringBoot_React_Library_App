@@ -167,5 +167,14 @@ exports["default"] = {
         console.log("API POST addNewBook");
         console.log(req);
         return axios_1["default"].post("http://localhost:8080/api/admin/secure/book/", data, config);
+    },
+    changeBookQuantity: function (req) {
+        var headers = req.headers, data = req.data;
+        var config = {
+            "headers": headers
+        };
+        console.log("API PUT changeBookQuantity");
+        console.log(req);
+        return axios_1["default"].put("http://localhost:8080/api/admin/secure/book/", data, config);
     }
 };

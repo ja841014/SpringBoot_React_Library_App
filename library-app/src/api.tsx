@@ -189,6 +189,16 @@ export default {
         return axios.post(`http://localhost:8080/api/admin/secure/book/`, data, config);
     },
 
+    changeBookQuantity(req: any) {
+        const {headers, data}  = req;
+        let config = {
+            "headers": headers, // {"Authorization":.....}
+        }
+        console.log("API PUT changeBookQuantity");
+        console.log(req);
+
+        return axios.put(`http://localhost:8080/api/admin/secure/book/`, data, config);
+    },
 
 
 

@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("h ttp://localhost:3000")
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
@@ -23,5 +23,15 @@ public class AdminController {
             throw new Exception("Administration page only");
         }
         adminService.postNewBook(addBookRequest);
+    }
+
+    @PutMapping("/secure/book")
+    public void changeBookQuantity(@RequestParam Long bookId, @RequestParam int scale, JwtAuthenticationToken jwtAuthenticationToken) throws Exception {
+        System.out.println("Put /api/admin/secure/book" );
+        String userType = jwtAuthenticationToken.getToken().getClaims().get("userType").toString();
+        if(userType == null || !userType.equals("admin")) {
+            throw new Exception("Administration page only");
+        }
+        adminService.changeBookQuantity(bookId, scale);
     }
 }

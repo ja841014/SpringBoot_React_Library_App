@@ -6,6 +6,7 @@ var react_1 = require("react");
 var react_router_dom_1 = require("react-router-dom");
 var AddNewBook_1 = require("./components/AddNewBook");
 var AdminMessages_1 = require("./components/AdminMessages");
+var ChangeQuantityOfBooks_1 = require("./components/ChangeQuantityOfBooks");
 exports.ManageLibraryPage = function () {
     var _a;
     var authState = okta_react_1.useOktaAuth().authState;
@@ -38,6 +39,6 @@ exports.ManageLibraryPage = function () {
             React.createElement("div", { className: 'tab-content', id: 'nav-tabContent' },
                 React.createElement("div", { className: 'tab-pane fade show active', id: 'nav-add-book', role: 'tabpanel', "aria-labelledby": 'nav-add-book-tab' },
                     React.createElement(AddNewBook_1.AddNewBook, null)),
-                React.createElement("div", { className: 'tab-pane fade', id: 'nav-quantity', role: 'tabpanel', "aria-labelledby": 'nav-quantity-tab' }),
+                React.createElement("div", { className: 'tab-pane fade', id: 'nav-quantity', role: 'tabpanel', "aria-labelledby": 'nav-quantity-tab' }, changeQuantityOfBooksClick ? React.createElement(ChangeQuantityOfBooks_1.ChangeQuantityOfBooks, null) : React.createElement(React.Fragment, null)),
                 React.createElement("div", { className: 'tab-pane fade', id: 'nav-messages', role: 'tabpanel', "aria-labelledby": 'nav-messages-tab' }, messageClick ? React.createElement(AdminMessages_1.AdminMessages, null) : React.createElement(React.Fragment, null))))));
 };
