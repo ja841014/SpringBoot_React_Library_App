@@ -173,11 +173,15 @@ exports.BookCheckoutPage = function () {
     }
     function submitReview(star, reviewDescription) {
         var requestOptions = oktaHeaderSetup();
-        var bookId = 0;
-        if (book === null || book === void 0 ? void 0 : book.id) {
-            bookId = book.id;
+        var curBook;
+        var reviewRequestModel = null;
+        if (book) {
+            curBook = book;
+            reviewRequestModel = new ReviewRequestModel_1["default"](star, curBook, reviewDescription);
         }
-        var reviewRequestModel = new ReviewRequestModel_1["default"](star, bookId, reviewDescription);
+        else {
+            console.error("book is not set");
+        }
         api_1["default"].submitReview({ data: reviewRequestModel, headers: requestOptions })
             .then(function (res) {
             var responseData = res.data;

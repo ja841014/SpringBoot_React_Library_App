@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin("h ttp://localhost:3000")
+@CrossOrigin("http://localhost:3000")
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
@@ -27,11 +27,21 @@ public class AdminController {
 
     @PutMapping("/secure/book")
     public void changeBookQuantity(@RequestParam Long bookId, @RequestParam int scale, JwtAuthenticationToken jwtAuthenticationToken) throws Exception {
-        System.out.println("Put /api/admin/secure/book" );
+        System.out.println("Put /api/admin/secure/book " + bookId + ", " + scale);
         String userType = jwtAuthenticationToken.getToken().getClaims().get("userType").toString();
         if(userType == null || !userType.equals("admin")) {
             throw new Exception("Administration page only");
         }
         adminService.changeBookQuantity(bookId, scale);
+    }
+
+    @DeleteMapping("/secure/book")
+    public void deleteBook(@RequestParam Long bookId, JwtAuthenticationToken jwtAuthenticationToken) throws Exception{
+        System.out.println("Delete /api/admin/secure/book " + bookId );
+        String userType = jwtAuthenticationToken.getToken().getClaims().get("userType").toString();
+        if(userType == null || !userType.equals("admin")) {
+            throw new Exception("Administration page only");
+        }
+        adminService.deleteBook(bookId);
     }
 }

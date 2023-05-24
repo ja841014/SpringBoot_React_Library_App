@@ -193,14 +193,25 @@ export default {
         const {headers, data}  = req;
         let config = {
             "headers": headers, // {"Authorization":.....}
+            "params": data
         }
         console.log("API PUT changeBookQuantity");
         console.log(req);
 
-        return axios.put(`http://localhost:8080/api/admin/secure/book/`, data, config);
+        return axios.put(`http://localhost:8080/api/admin/secure/book/`, null, config);
     },
 
 
+    deleteBook(req: any) {
+        const {headers, data}  = req;
+        const config = {
+            "headers": headers,
+            "params": data
+        }
+        console.log("API DELETE deleteBook");
+        console.log(req);
+        return axios.delete(`http://localhost:8080/api/admin/secure/book/`, config)
+    }
 
 
 }

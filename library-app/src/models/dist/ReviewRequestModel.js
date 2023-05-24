@@ -1,9 +1,9 @@
 "use strict";
 exports.__esModule = true;
 var ReviewRequestModel = /** @class */ (function () {
-    function ReviewRequestModel(rating, bookId, reviewDescription) {
+    function ReviewRequestModel(rating, book, reviewDescription) {
         this.rating = rating;
-        this.bookId = bookId;
+        this.book = book;
         this.reviewDescription = reviewDescription;
     }
     return ReviewRequestModel;

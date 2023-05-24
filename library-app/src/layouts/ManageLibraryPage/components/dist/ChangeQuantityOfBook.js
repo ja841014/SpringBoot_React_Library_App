@@ -17,10 +17,33 @@ exports.ChangeQuantityOfBook = function (props) {
     }, []);
     function increaseQuantity() {
         var requestOptions = oktaHeaderSetup();
-        api_1["default"].changeBookQuantity({ data: { bookId: props.book.id, scale: 1 }, headers: requestOptions })
+        api_1["default"].changeBookQuantity({ data: { bookId: props.book.id, scale: 1 }, headers: requestOptions.headers })
             .then(function (res) {
             setQuantity(quantity + 1);
             serRemaining(remaining + 1);
+        })["catch"](function (err) {
+            console.error("Error!!" + err.message);
+            throw new Error(err.message);
+        });
+    }
+    function decreaseQuantity() {
+        var requestOptions = oktaHeaderSetup();
+        api_1["default"].changeBookQuantity({ data: { bookId: props.book.id, scale: -1 }, headers: requestOptions.headers })
+            .then(function (res) {
+            setQuantity(quantity - 1);
+            serRemaining(remaining - 1);
+        })["catch"](function (err) {
+            console.error("Error!!" + err.message);
+            throw new Error(err.message);
+        });
+    }
+    function deleteBook() {
+        var requestOptions = oktaHeaderSetup();
+        api_1["default"].deleteBook({ data: { bookId: props.book.id }, headers: requestOptions.headers })
+            .then(function (res) {
+            setQuantity(quantity - 1);
+            serRemaining(remaining - 1);
+            props.deleteBook();
         })["catch"](function (err) {
             console.error("Error!!" + err.message);
             throw new Error(err.message);
@@ -67,6 +90,6 @@ exports.ChangeQuantityOfBook = function (props) {
             React.createElement("div", { className: 'mt-3 col-md-1' },
                 React.createElement("div", { className: 'd-flex justify-content-start' },
                     React.createElement("button", { className: 'm-1 btn btn-md btn-danger', onClick: deleteBook }, "Delete"))),
-            React.createElement("button", { className: 'm1 btn btn-md main-color text-white', onClick: increaseQuantity }, "Add Quantity"),
+            React.createElement("button", { className: 'm1 btn btn-md btn-primary', onClick: increaseQuantity }, "Add Quantity"),
             React.createElement("button", { className: 'm1 btn btn-md btn-warning', onClick: decreaseQuantity }, "Decrease Quantity"))));
 };

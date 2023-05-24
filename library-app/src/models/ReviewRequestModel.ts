@@ -1,11 +1,13 @@
+import BookModel from "./BookModel";
+
 class ReviewRequestModel {
     rating: number;
-    bookId: number;
+    book: BookModel;
     reviewDescription?: string;
 
-    constructor(rating: number, bookId: number, reviewDescription?: string) {
+    constructor(rating: number, book: BookModel, reviewDescription?: string) {
         this.rating = rating;
-        this.bookId= bookId;
+        this.book= book;
         this.reviewDescription = reviewDescription;
     }
 }

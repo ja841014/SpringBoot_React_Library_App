@@ -27,16 +27,20 @@ public class Review {
     @Column(name = "rating")
     private double rating;
 
-    @Column(name = "book_id")
-    private Long bookId;
+//    @Column(name = "book_id")
+    @OneToOne(targetEntity = Book.class, cascade = CascadeType.DETACH)
+    // the name should same as your database name
+    @JoinColumn(name="book_id",
+        referencedColumnName = "id")
+    private Book bookId;
 
     @Column(name = "review_description")
     private String reviewDescription;
 
     public Review() {};
 
-    public Review(Long bookId, double rating, String userEmail, String reviewDescription, Date date) {
-        this.bookId = bookId;
+    public Review(Book book, double rating, String userEmail, String reviewDescription, Date date) {
+        this.bookId = book;
         this.rating = rating;
         this.userEmail = userEmail;
         this.reviewDescription = reviewDescription;

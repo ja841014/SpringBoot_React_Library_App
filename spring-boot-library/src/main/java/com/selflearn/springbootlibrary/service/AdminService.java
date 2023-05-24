@@ -40,5 +40,13 @@ public class AdminService {
         bookRepository.save(book);
     }
 
+    public void deleteBook(Long bookId) throws Exception{
+        Optional<Book> book = bookRepository.findById(bookId);
+        if(!book.isPresent()) {
+            throw new Exception("Book not found");
+        }
+        bookRepository.deleteById(bookId);
+    }
+
 
 }

@@ -21,7 +21,7 @@ export const ChangeQuantityOfBook = (props: any) => {
 
         let requestOptions = oktaHeaderSetup();
 
-        api.changeBookQuantity({data:{bookId: props.book.id, scale: 1}, headers: requestOptions})
+        api.changeBookQuantity({data:{bookId: props.book.id, scale: 1}, headers: requestOptions.headers})
         .then((res) => {
             setQuantity(quantity + 1)
             serRemaining(remaining + 1)
@@ -32,6 +32,39 @@ export const ChangeQuantityOfBook = (props: any) => {
         })
 
     }
+
+    function decreaseQuantity() {
+
+        let requestOptions = oktaHeaderSetup();
+
+        api.changeBookQuantity({data:{bookId: props.book.id, scale: -1}, headers: requestOptions.headers})
+        .then((res) => {
+            setQuantity(quantity - 1)
+            serRemaining(remaining - 1)
+        })
+        .catch((err) => {
+            console.error("Error!!" + err.message)
+            throw new Error(err.message);
+        })
+
+    }
+
+    function deleteBook() {
+
+        let requestOptions = oktaHeaderSetup();
+
+        api.deleteBook({data:{bookId: props.book.id}, headers: requestOptions.headers})
+        .then((res) => {
+            setQuantity(quantity - 1)
+            serRemaining(remaining - 1)
+            props.deleteBook()
+        })
+        .catch((err) => {
+            console.error("Error!!" + err.message)
+            throw new Error(err.message);
+        })
+
+    } 
 
     function oktaHeaderSetup() {
         const requestOptions = {
@@ -85,7 +118,7 @@ export const ChangeQuantityOfBook = (props: any) => {
                         <button className='m-1 btn btn-md btn-danger' onClick={deleteBook}>Delete</button>
                     </div>
                 </div>
-                <button className='m1 btn btn-md main-color text-white' onClick={increaseQuantity}>Add Quantity</button>
+                <button className='m1 btn btn-md btn-primary' onClick={increaseQuantity}>Add Quantity</button>
                 <button className='m1 btn btn-md btn-warning' onClick={decreaseQuantity}>Decrease Quantity</button>
             </div>
         </div>

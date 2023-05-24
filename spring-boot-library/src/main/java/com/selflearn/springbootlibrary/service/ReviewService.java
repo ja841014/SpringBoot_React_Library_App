@@ -22,17 +22,17 @@ public class ReviewService {
         this.reviewRepository = reviewRepository;
     };
 
-    public Page<Review> findByBookId(Long bookId, int page, int size) {
+    public Page<Review> findByBookId_Id(Long bookId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return reviewRepository.findByBookId(bookId, pageable);
+        return reviewRepository.findByBookId_Id(bookId, pageable);
     }
 
     public void postReview(String userEmail, ReviewRequest reviewRequest) throws Exception{
-        Review validateReview = reviewRepository.findByUserEmailAndBookId(userEmail, reviewRequest.getBookId());
+        Review validateReview = reviewRepository.findByUserEmailAndBookId_Id(userEmail, reviewRequest.getBook().getId());
         if(validateReview != null) {
             throw new Exception("Review already created");
         }
-        Review review = new Review(reviewRequest.getBookId(),
+        Review review = new Review(reviewRequest.getBook(),
                 reviewRequest.getRating(),
                 userEmail,
                 reviewRequest.getReviewDescription().orElse(null),
@@ -42,7 +42,7 @@ public class ReviewService {
     }
 
     public Boolean userReviewedLeft(String userEmail, Long bookId) {
-        Review validateReview = reviewRepository.findByUserEmailAndBookId(userEmail,bookId);
+        Review validateReview = reviewRepository.findByUserEmailAndBookId_Id(userEmail,bookId);
         if(validateReview != null) {
             return true;
         }

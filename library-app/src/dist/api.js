@@ -171,10 +171,21 @@ exports["default"] = {
     changeBookQuantity: function (req) {
         var headers = req.headers, data = req.data;
         var config = {
-            "headers": headers
+            "headers": headers,
+            "params": data
         };
         console.log("API PUT changeBookQuantity");
         console.log(req);
-        return axios_1["default"].put("http://localhost:8080/api/admin/secure/book/", data, config);
+        return axios_1["default"].put("http://localhost:8080/api/admin/secure/book/", null, config);
+    },
+    deleteBook: function (req) {
+        var headers = req.headers, data = req.data;
+        var config = {
+            "headers": headers,
+            "params": data
+        };
+        console.log("API DELETE deleteBook");
+        console.log(req);
+        return axios_1["default"]["delete"]("http://localhost:8080/api/admin/secure/book/", config);
     }
 };

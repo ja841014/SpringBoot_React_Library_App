@@ -223,11 +223,17 @@ export const BookCheckoutPage = () => {
     function submitReview(star: number, reviewDescription: string) {
 
         const requestOptions = oktaHeaderSetup();
-        let bookId: number = 0;
-        if(book?.id) {
-            bookId = book.id;
+        let curBook: BookModel;
+        let reviewRequestModel = null;
+
+        if(book) {
+            curBook = book
+            reviewRequestModel = new ReviewRequestModel(star, curBook, reviewDescription);
         }
-        const reviewRequestModel = new ReviewRequestModel(star, bookId, reviewDescription);
+        else {
+            console.error("book is not set")
+        }
+        
 
         api.submitReview({data: reviewRequestModel, headers: requestOptions})
         .then((res) => {

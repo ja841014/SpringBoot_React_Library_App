@@ -19,6 +19,10 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     Page<Book> findByTitleContaining(String title, Pageable pageable);
     Page<Book> findByCategoryContaining(String category, Pageable pageable);
 
+    void deleteById(Long id);
+
+
+
 //    @Query("SELECT o FROM Book o where id in :bookids")
 //    List<Book> findBooksByBookIds(@Params("book_ids") List<Long> bookId);
 

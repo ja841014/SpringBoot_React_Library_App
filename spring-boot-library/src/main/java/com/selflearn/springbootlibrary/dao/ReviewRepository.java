@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 //@CrossOrigin
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-    Page<Review> findByBookId(Long bookId, Pageable pageable);
+    Page<Review> findByBookId_Id(Long bookId, Pageable pageable);
 
-    Review findByUserEmailAndBookId(String userEmail, Long bookId);
+    Review findByUserEmailAndBookId_Id(String userEmail, Long bookId);
+
+
 }
