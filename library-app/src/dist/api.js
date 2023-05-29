@@ -1,10 +1,11 @@
 "use strict";
 exports.__esModule = true;
 var axios_1 = require("axios");
+var baseURL = process.env.REACT_APP_API;
 exports["default"] = {
     getAllBooks: function (params) {
         // remember add {} outside "params"
-        return axios_1["default"].get("http://localhost:8080/api/books", { params: params });
+        return axios_1["default"].get(baseURL + "/books", { params: params });
     },
     /**
      *
@@ -13,17 +14,17 @@ exports["default"] = {
      */
     getBook: function (params) {
         console.log("getBook: " + JSON.stringify(params));
-        return axios_1["default"].get("http://localhost:8080/api/books/" + params.id);
+        return axios_1["default"].get(baseURL + "/books/" + params.id);
     },
     // get book information
     getReviewByBookId: function (params) {
         console.log("getReviewByBookId: " + JSON.stringify(params));
-        return axios_1["default"].get("http://localhost:8080/api/reviews/books/" + params.id, { params: params });
+        return axios_1["default"].get(baseURL + "/reviews/books/" + params.id, { params: params });
     },
     // get loans count by current user
     getCurrentLoansCountByUser: function (params) {
         console.log("getCurrentLoansCountByUser" + JSON.stringify(params));
-        return axios_1["default"].get("http://localhost:8080/api/secure/loans/count", params.requestOptions);
+        return axios_1["default"].get(baseURL + "/secure/loans/count", params.requestOptions);
     },
     // is book be cheked out bu the user
     isCheckoutByUser: function (req) {
@@ -33,7 +34,7 @@ exports["default"] = {
             "headers": headers.headers,
             "params": { "bookId": params }
         };
-        return axios_1["default"].get("http://localhost:8080/api/secure/checkout", config);
+        return axios_1["default"].get(baseURL + "/secure/checkout", config);
     },
     // checkout a book
     checkoutBook: function (req) {
@@ -44,7 +45,7 @@ exports["default"] = {
             "params": { "bookId": params }
         };
         // put(url, requestBody, config(such as headers, params))
-        return axios_1["default"].put("http://localhost:8080/api/secure/checkout", null, config);
+        return axios_1["default"].put(baseURL + "/secure/checkout", null, config);
     },
     isLeftReview: function (req) {
         console.log("isLeftReview: " + JSON.stringify(req));
@@ -55,7 +56,7 @@ exports["default"] = {
         };
         console.log("API GET isLeftReview");
         console.log(req);
-        return axios_1["default"].get("http://localhost:8080/api/reviews/secure/books", config);
+        return axios_1["default"].get(baseURL + "/reviews/secure/books", config);
     },
     // submit a review
     submitReview: function (req) {
@@ -70,7 +71,7 @@ exports["default"] = {
          * data
          * params
          */
-        return axios_1["default"].post("http://localhost:8080/api/reviews/secure/review", data, config);
+        return axios_1["default"].post(baseURL + "/reviews/secure/review", data, config);
     },
     getLoansDetail: function (req) {
         var headers = req.headers;
@@ -84,7 +85,7 @@ exports["default"] = {
          * data
          * params
          */
-        return axios_1["default"].get("http://localhost:8080/api/secure/currentloans", config);
+        return axios_1["default"].get(baseURL + "/secure/currentloans", config);
     },
     returnBook: function (req) {
         var headers = req.headers, params = req.params;
@@ -94,7 +95,7 @@ exports["default"] = {
         };
         console.log("API PUT returnBook");
         console.log(req);
-        return axios_1["default"].put("http://localhost:8080/api/secure/return", null, config);
+        return axios_1["default"].put(baseURL + "/secure/return", null, config);
     },
     renewLoan: function (req) {
         var headers = req.headers, params = req.params;
@@ -104,7 +105,7 @@ exports["default"] = {
         };
         console.log("API PUT renewLoan()");
         console.log(req);
-        return axios_1["default"].put("http://localhost:8080/api/secure/renewloan", null, config);
+        return axios_1["default"].put(baseURL + "/secure/renewloan", null, config);
     },
     getHistory: function (req) {
         var headers = req.headers, params = req.params;
@@ -119,7 +120,7 @@ exports["default"] = {
          * data
          * params
          */
-        return axios_1["default"].get("http://localhost:8080/api/histories/secure/", config);
+        return axios_1["default"].get(baseURL + "/histories/secure/", config);
     },
     submitNewQuestion: function (req) {
         var headers = req.headers, data = req.data;
@@ -128,7 +129,7 @@ exports["default"] = {
         };
         console.log("API POST submitNewQuestion");
         console.log(req);
-        return axios_1["default"].post("http://localhost:8080/api/messages/secure/", data, config);
+        return axios_1["default"].post(baseURL + "/messages/secure/", data, config);
     },
     getAllQuestionByUserEmail: function (req) {
         var headers = req.headers, params = req.params;
@@ -138,7 +139,7 @@ exports["default"] = {
         };
         console.log("API GET getAllQuestionByUserEmail");
         console.log(req);
-        return axios_1["default"].get("http://localhost:8080/api/messages/secure/", config);
+        return axios_1["default"].get(baseURL + "/messages/secure/", config);
     },
     getAllQuestionByClosed: function (req) {
         var headers = req.headers, params = req.params;
@@ -148,7 +149,7 @@ exports["default"] = {
         };
         console.log("API GET getAllQuestionByClosed");
         console.log(req);
-        return axios_1["default"].get("http://localhost:8080/api/messages/secure/admin", config);
+        return axios_1["default"].get(baseURL + "/messages/secure/admin", config);
     },
     submitQuestionResponse: function (req) {
         var headers = req.headers, data = req.data;
@@ -157,7 +158,7 @@ exports["default"] = {
         };
         console.log("API PUT submitQuestionResponse");
         console.log(req);
-        return axios_1["default"].put("http://localhost:8080/api/messages/secure/admin", data, config);
+        return axios_1["default"].put(baseURL + "/messages/secure/admin", data, config);
     },
     addNewBook: function (req) {
         var headers = req.headers, data = req.data;
@@ -166,7 +167,7 @@ exports["default"] = {
         };
         console.log("API POST addNewBook");
         console.log(req);
-        return axios_1["default"].post("http://localhost:8080/api/admin/secure/book/", data, config);
+        return axios_1["default"].post(baseURL + "/admin/secure/book/", data, config);
     },
     changeBookQuantity: function (req) {
         var headers = req.headers, data = req.data;
@@ -176,7 +177,7 @@ exports["default"] = {
         };
         console.log("API PUT changeBookQuantity");
         console.log(req);
-        return axios_1["default"].put("http://localhost:8080/api/admin/secure/book/", null, config);
+        return axios_1["default"].put(baseURL + "/admin/secure/book/", null, config);
     },
     deleteBook: function (req) {
         var headers = req.headers, data = req.data;
@@ -186,6 +187,6 @@ exports["default"] = {
         };
         console.log("API DELETE deleteBook");
         console.log(req);
-        return axios_1["default"]["delete"]("http://localhost:8080/api/admin/secure/book/", config);
+        return axios_1["default"]["delete"](baseURL + "/admin/secure/book/", config);
     }
 };

@@ -1,9 +1,14 @@
 import axios from "axios";
 
+const baseURL = process.env.REACT_APP_API;
+
 export default {
+
+    
+
     getAllBooks(params: any) {
         // remember add {} outside "params"
-        return axios.get("http://localhost:8080/api/books", {params});
+        return axios.get(`${baseURL}/books`, {params});
     },
     /**
      * 
@@ -12,18 +17,18 @@ export default {
      */
     getBook(params: any) {
         console.log("getBook: " + JSON.stringify(params));
-        return axios.get(`http://localhost:8080/api/books/${params.id}`);
+        return axios.get(`${baseURL}/books/${params.id}`);
     },
     // get book information
     getReviewByBookId(params: any) {
         console.log("getReviewByBookId: " + JSON.stringify(params));
-        return axios.get(`http://localhost:8080/api/reviews/books/${params.id}`, {params});
+        return axios.get(`${baseURL}/reviews/books/${params.id}`, {params});
     },
 
     // get loans count by current user
     getCurrentLoansCountByUser(params: {requestOptions: any}) {
         console.log("getCurrentLoansCountByUser" + JSON.stringify(params));
-        return axios.get("http://localhost:8080/api/secure/loans/count", params.requestOptions);
+        return axios.get(`${baseURL}/secure/loans/count`, params.requestOptions);
     },
     // is book be cheked out bu the user
     isCheckoutByUser(req : any) {
@@ -36,7 +41,7 @@ export default {
             "params": {"bookId": params}
         }
 
-        return axios.get("http://localhost:8080/api/secure/checkout", config);
+        return axios.get(`${baseURL}/secure/checkout`, config);
     },
     // checkout a book
     checkoutBook(req : any) {
@@ -48,7 +53,7 @@ export default {
             "params": {"bookId": params}
         }
         // put(url, requestBody, config(such as headers, params))
-        return axios.put(`http://localhost:8080/api/secure/checkout`, null, config);
+        return axios.put(`${baseURL}/secure/checkout`, null, config);
     },
 
     isLeftReview(req : any) {
@@ -62,7 +67,7 @@ export default {
         console.log("API GET isLeftReview")
         console.log(req);
 
-        return axios.get(`http://localhost:8080/api/reviews/secure/books`, config);
+        return axios.get(`${baseURL}/reviews/secure/books`, config);
     },
     // submit a review
     submitReview(req: any) {
@@ -77,7 +82,7 @@ export default {
          * data
          * params
          */
-        return axios.post(`http://localhost:8080/api/reviews/secure/review`, data, config);
+        return axios.post(`${baseURL}/reviews/secure/review`, data, config);
     },
 
     getLoansDetail(req: any) {
@@ -92,7 +97,7 @@ export default {
          * data
          * params
          */
-        return axios.get(`http://localhost:8080/api/secure/currentloans`, config);
+        return axios.get(`${baseURL}/secure/currentloans`, config);
     },
 
     returnBook(req: any) {
@@ -103,7 +108,7 @@ export default {
         }
         console.log("API PUT returnBook")
         console.log(req)
-        return axios.put(`http://localhost:8080/api/secure/return`, null, config);
+        return axios.put(`${baseURL}/secure/return`, null, config);
     },
 
     renewLoan(req: any) {
@@ -114,7 +119,7 @@ export default {
         }
         console.log("API PUT renewLoan()")
         console.log(req)
-        return axios.put(`http://localhost:8080/api/secure/renewloan`, null, config);
+        return axios.put(`${baseURL}/secure/renewloan`, null, config);
     },
 
     getHistory(req: any) {
@@ -130,7 +135,7 @@ export default {
          * data
          * params
          */
-        return axios.get(`http://localhost:8080/api/histories/secure/`, config);
+        return axios.get(`${baseURL}/histories/secure/`, config);
     },
 
     submitNewQuestion(req: any) {
@@ -141,7 +146,7 @@ export default {
         console.log("API POST submitNewQuestion");
         console.log(req);
 
-        return axios.post(`http://localhost:8080/api/messages/secure/`, data, config);
+        return axios.post(`${baseURL}/messages/secure/`, data, config);
     },
 
     getAllQuestionByUserEmail(req: any) {
@@ -153,7 +158,7 @@ export default {
         console.log("API GET getAllQuestionByUserEmail");
         console.log(req);
 
-        return axios.get(`http://localhost:8080/api/messages/secure/`, config);
+        return axios.get(`${baseURL}/messages/secure/`, config);
     },
 
     getAllQuestionByClosed(req: any) {
@@ -165,7 +170,7 @@ export default {
         console.log("API GET getAllQuestionByClosed");
         console.log(req);
 
-        return axios.get(`http://localhost:8080/api/messages/secure/admin`, config);
+        return axios.get(`${baseURL}/messages/secure/admin`, config);
     },
 
     submitQuestionResponse(req: any) {
@@ -175,7 +180,7 @@ export default {
         }
         console.log("API PUT submitQuestionResponse");
         console.log(req);
-        return axios.put(`http://localhost:8080/api/messages/secure/admin`, data, config)
+        return axios.put(`${baseURL}/messages/secure/admin`, data, config)
     },
 
     addNewBook(req: any) {
@@ -186,7 +191,7 @@ export default {
         console.log("API POST addNewBook");
         console.log(req);
 
-        return axios.post(`http://localhost:8080/api/admin/secure/book/`, data, config);
+        return axios.post(`${baseURL}/admin/secure/book/`, data, config);
     },
 
     changeBookQuantity(req: any) {
@@ -198,7 +203,7 @@ export default {
         console.log("API PUT changeBookQuantity");
         console.log(req);
 
-        return axios.put(`http://localhost:8080/api/admin/secure/book/`, null, config);
+        return axios.put(`${baseURL}/admin/secure/book/`, null, config);
     },
 
 
@@ -210,7 +215,7 @@ export default {
         }
         console.log("API DELETE deleteBook");
         console.log(req);
-        return axios.delete(`http://localhost:8080/api/admin/secure/book/`, config)
+        return axios.delete(`${baseURL}/admin/secure/book/`, config)
     }
 
 

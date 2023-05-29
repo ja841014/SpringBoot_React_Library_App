@@ -41,7 +41,8 @@ var react_router_dom_1 = require("react-router-dom");
 var okta_react_1 = require("@okta/okta-react");
 var SpinnerLoading_1 = require("../Utils/SpinnerLoading");
 exports.Navbar = function () {
-    var _a = okta_react_1.useOktaAuth(), oktaAuth = _a.oktaAuth, authState = _a.authState;
+    var _a, _b;
+    var _c = okta_react_1.useOktaAuth(), oktaAuth = _c.oktaAuth, authState = _c.authState;
     if (!authState) {
         return React.createElement(SpinnerLoading_1.SpinnerLoading, null);
     }
@@ -63,7 +64,10 @@ exports.Navbar = function () {
                         React.createElement(react_router_dom_1.NavLink, { className: "nav-link", to: "/search" }, "Search Book")),
                     authState.isAuthenticated &&
                         React.createElement("li", { className: 'nav-item' },
-                            React.createElement(react_router_dom_1.NavLink, { className: "nav-link", to: "/shelf" }, "Shelf"))),
+                            React.createElement(react_router_dom_1.NavLink, { className: "nav-link", to: "/shelf" }, "Shelf")),
+                    authState.isAuthenticated && ((_b = (_a = authState.accessToken) === null || _a === void 0 ? void 0 : _a.claims) === null || _b === void 0 ? void 0 : _b.userType) === 'admin' &&
+                        React.createElement("li", { className: 'nav-item' },
+                            React.createElement(react_router_dom_1.NavLink, { className: "nav-link", to: "/admin" }, "Admin"))),
                 React.createElement("ul", { className: 'navbar-nav ms-auto' }, !authState.isAuthenticated ?
                     React.createElement("li", { className: "nav-item m-1" },
                         React.createElement(react_router_dom_1.Link, { type: "button", className: "btn btn-outline-light", to: "/login" }, "Sign in"))
