@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 
@@ -27,8 +28,9 @@ public class BookController {
     public Page<Book> findByTitleContainingOrCategory(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
                                                       @RequestParam(value = "size", defaultValue = "10", required = false) int size,
                                                       @RequestParam(value = "title", defaultValue = "", required = false) String title,
-                                                      @RequestParam(value = "category", defaultValue = "", required = false) String category) {
-
+                                                      @RequestParam(value = "category", defaultValue = "", required = false) String category,
+    HttpSession session) {
+        System.out.println("fjdkl: " + session.getId());
         if(!title.equals("") && !category.equals("Book Category") && !category.equals("All")) {
             System.out.println("Get /books {title} {category} " + title + ", " + category);
             return bookService.findByTitleContainingAndCategoryContaining(page, size, title, category);

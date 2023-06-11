@@ -31,6 +31,8 @@ exports.BookCheckoutPage = function () {
     //is review left
     var _l = react_1.useState(false), isReviewLeft = _l[0], setIsReviewLeft = _l[1];
     var _m = react_1.useState(true), isLoadingUserReview = _m[0], setIsLoadingUserReview = _m[1];
+    //Payment
+    var _o = react_1.useState(false), displayErr = _o[0], setDisplayErr = _o[1];
     // get book information from backend
     react_1.useEffect(function () {
         api_1["default"].getBook({ id: bookId })
@@ -162,12 +164,14 @@ exports.BookCheckoutPage = function () {
             var responseData = res.data;
             console.log("checkoutBook");
             if (responseData) {
+                setDisplayErr(false);
                 setIsCheckedOut(true);
             }
         })["catch"](function (error) {
             console.error("Loading checkoutBook Error");
             setIsLoadingBookCheckedOut(false);
-            setHttpError(error.message);
+            setDisplayErr(true);
+            // setHttpError(error.message)
             throw new Error(error.message);
         });
     }
@@ -206,6 +210,8 @@ exports.BookCheckoutPage = function () {
     }
     return (React.createElement("div", null,
         React.createElement("div", { className: 'container d-none d-lg-block' },
+            displayErr &&
+                React.createElement("div", { className: "alert alert-danger mt-3", role: 'alert' }, "Please pay fees and/or return late book(s)."),
             React.createElement("div", { className: 'row mt-5' },
                 React.createElement("div", { className: 'col-sm-2 col-md-2' }, (book === null || book === void 0 ? void 0 : book.img) ?
                     React.createElement("img", { src: book === null || book === void 0 ? void 0 : book.img, width: '226', height: '349', alt: 'Book' })
@@ -221,6 +227,8 @@ exports.BookCheckoutPage = function () {
             React.createElement("hr", null),
             React.createElement(LatestReviews_1.LatestReviews, { reviews: reviews, bookId: book === null || book === void 0 ? void 0 : book.id, mobile: false })),
         React.createElement("div", { className: 'container d-lg-none mt-5' },
+            displayErr &&
+                React.createElement("div", { className: "alert alert-danger mt-3", role: 'alert' }, "Please pay fees and/or return late book(s)."),
             React.createElement("div", { className: 'd-flex justify-content-center alighn-items-center' }, (book === null || book === void 0 ? void 0 : book.img) ?
                 React.createElement("img", { src: book === null || book === void 0 ? void 0 : book.img, width: '226', height: '349', alt: 'Book' })
                 :

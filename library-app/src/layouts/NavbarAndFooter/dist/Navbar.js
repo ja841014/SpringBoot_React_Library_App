@@ -65,6 +65,9 @@ exports.Navbar = function () {
                     authState.isAuthenticated &&
                         React.createElement("li", { className: 'nav-item' },
                             React.createElement(react_router_dom_1.NavLink, { className: "nav-link", to: "/shelf" }, "Shelf")),
+                    authState.isAuthenticated &&
+                        React.createElement("li", { className: 'nav-item' },
+                            React.createElement(react_router_dom_1.NavLink, { className: "nav-link", to: "/fees" }, "Pay Fees")),
                     authState.isAuthenticated && ((_b = (_a = authState.accessToken) === null || _a === void 0 ? void 0 : _a.claims) === null || _b === void 0 ? void 0 : _b.userType) === 'admin' &&
                         React.createElement("li", { className: 'nav-item' },
                             React.createElement(react_router_dom_1.NavLink, { className: "nav-link", to: "/admin" }, "Admin"))),

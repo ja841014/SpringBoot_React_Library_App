@@ -5,6 +5,7 @@ var baseURL = process.env.REACT_APP_API;
 exports["default"] = {
     getAllBooks: function (params) {
         // remember add {} outside "params"
+        console.log(process.env);
         return axios_1["default"].get(baseURL + "/books", { params: params });
     },
     /**
@@ -188,5 +189,32 @@ exports["default"] = {
         console.log("API DELETE deleteBook");
         console.log(req);
         return axios_1["default"]["delete"](baseURL + "/admin/secure/book/", config);
+    },
+    createPaymentIntent: function (req) {
+        var headers = req.headers, data = req.data;
+        var config = {
+            "headers": headers
+        };
+        console.log("API POST createPaymentIntent");
+        console.log(req);
+        return axios_1["default"].post(baseURL + "/payment/secure/payment-intent", data, config);
+    },
+    stripePaymentComplete: function (req) {
+        var headers = req.headers;
+        var config = {
+            "headers": headers
+        };
+        console.log("API PUT stripePaymentComplete");
+        console.log(req);
+        return axios_1["default"].put(baseURL + "/payment/secure/payment-complete", null, config);
+    },
+    paymentDetail: function (req) {
+        var headers = req.headers;
+        var config = {
+            "headers": headers
+        };
+        console.log("API GET paymentDetail");
+        console.log(req);
+        return axios_1["default"].get(baseURL + "/payment/secure/payment-details", config);
     }
 };

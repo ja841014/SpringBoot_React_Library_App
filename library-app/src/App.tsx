@@ -16,6 +16,7 @@ import { ReviewListPage } from './layouts/BookCheckoutPage/ReviewListPage';
 import { ShelfPage } from './layouts/ShelfPage/ShelfPage';
 import { MessagePage } from './layouts/MessagePage/MessagePage';
 import { ManageLibraryPage } from './layouts/ManageLibraryPage/ManageLibraryPage';
+import { PaymentPage } from './layouts/BookCheckoutPage/PaymentPage/PaymentPage';
 
 export const App = () => {
 
@@ -73,6 +74,10 @@ export const App = () => {
               
               <SecureRoute path='/admin'> 
                 <ManageLibraryPage/> 
+              </SecureRoute>
+
+              <SecureRoute path='/fees'> 
+                <PaymentPage/> 
               </SecureRoute>
 
             </Switch>

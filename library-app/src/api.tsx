@@ -8,6 +8,7 @@ export default {
 
     getAllBooks(params: any) {
         // remember add {} outside "params"
+        console.log(process.env)
         return axios.get(`${baseURL}/books`, {params});
     },
     /**
@@ -216,6 +217,38 @@ export default {
         console.log("API DELETE deleteBook");
         console.log(req);
         return axios.delete(`${baseURL}/admin/secure/book/`, config)
+    },
+
+    createPaymentIntent(req: any) {
+        const {headers, data}  = req;
+        let config = {
+            "headers": headers, // {"Authorization":.....}
+        }
+        console.log("API POST createPaymentIntent");
+        console.log(req);
+
+        return axios.post(`${baseURL}/payment/secure/payment-intent`, data, config);
+    },
+
+    stripePaymentComplete(req: any) {
+        const {headers}  = req;
+        let config = {
+            "headers": headers, // {"Authorization":.....}
+        }
+        console.log("API PUT stripePaymentComplete");
+        console.log(req);
+
+        return axios.put(`${baseURL}/payment/secure/payment-complete`, null, config);
+    },
+
+    paymentDetail(req: any) {
+        const {headers}  = req;
+        let config = {
+            "headers": headers, // {"Authorization":.....}
+        }
+        console.log("API GET paymentDetail");
+        console.log(req);
+        return axios.get(`${baseURL}/payment/secure/payment-details`, config);
     }
 
 

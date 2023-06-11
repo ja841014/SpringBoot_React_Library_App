@@ -44,6 +44,9 @@ export const BookCheckoutPage = () => {
     const[isReviewLeft, setIsReviewLeft] = useState(false);
     const[isLoadingUserReview, setIsLoadingUserReview] = useState(true);
 
+    //Payment
+    const[displayErr, setDisplayErr] = useState(false);
+
     // get book information from backend
     useEffect(() => {
         api.getBook({id: bookId})
@@ -209,13 +212,15 @@ export const BookCheckoutPage = () => {
             const responseData = res.data;
             console.log("checkoutBook");
             if(responseData) {
+                setDisplayErr(false)
                 setIsCheckedOut(true);
             }
         })
         .catch((error) => {
             console.error("Loading checkoutBook Error")
             setIsLoadingBookCheckedOut(false)
-            setHttpError(error.message)
+            setDisplayErr(true)
+            // setHttpError(error.message)
             throw new Error(error.message);
         })
     }
@@ -263,6 +268,12 @@ export const BookCheckoutPage = () => {
     return(
         <div>
             <div className='container d-none d-lg-block'>
+                {
+                    displayErr && 
+                    <div className="alert alert-danger mt-3" role='alert'>
+                        Please pay fees and/or return late book(s).
+                    </div>
+                }
                 <div className='row mt-5'>
                     <div className='col-sm-2 col-md-2'>
                         {book?.img ?
@@ -292,6 +303,12 @@ export const BookCheckoutPage = () => {
 
             {/** Mobile versino */}
             <div className='container d-lg-none mt-5'>
+                {
+                    displayErr && 
+                    <div className="alert alert-danger mt-3" role='alert'>
+                        Please pay fees and/or return late book(s).
+                    </div>
+                }
                 <div className='d-flex justify-content-center alighn-items-center'>
                     {book?.img ?
                         <img src={book?.img} width='226' height='349' alt='Book' />

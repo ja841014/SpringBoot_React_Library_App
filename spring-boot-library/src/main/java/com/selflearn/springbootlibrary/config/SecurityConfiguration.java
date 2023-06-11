@@ -23,7 +23,8 @@ public class SecurityConfiguration {
                                 "/api/reviews/secure/**",
                                 "/api/history/secure/**",
                                 "/api/messages/secure/**",
-                                "/api/admin/secure/**") // this step is filter what path we want to protect it.
+                                "/api/admin/secure/**",
+                                "/api/payment/secure/**") // this step is filter what path we want to protect it.
                         .authenticated()) // this step is to specify how we want to protect it
             .oauth2ResourceServer()
             .jwt();

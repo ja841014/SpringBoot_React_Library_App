@@ -47,6 +47,14 @@ export const Navbar = () => {
               </li>
             }
 
+            {/*  you can see the below fees tab only if you login*/}
+            {
+              authState.isAuthenticated &&
+              <li className='nav-item'>
+                <NavLink className="nav-link" to="/fees">Pay Fees</NavLink>
+              </li>
+            }
+
             {
               authState.isAuthenticated &&authState.accessToken?.claims?.userType === 'admin' &&
               <li className='nav-item'>

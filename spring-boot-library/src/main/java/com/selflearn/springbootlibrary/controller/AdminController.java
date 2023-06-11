@@ -17,7 +17,8 @@ public class AdminController {
     }
     @PostMapping("/secure/book")
     public void addNewBook(@RequestBody AddBookRequest addBookRequest, JwtAuthenticationToken jwtAuthenticationToken) throws Exception{
-        System.out.println("Post /api/admin/secure/book" );
+
+        System.out.println("Post /api/admin/secure/book");
         String userType = jwtAuthenticationToken.getToken().getClaims().get("userType").toString();
         if(userType == null || !userType.equals("admin")) {
             throw new Exception("Administration page only");
